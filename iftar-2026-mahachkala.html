@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080d1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Рамадан 2026">
+<meta name="application-name" content="Рамадан 2026">
+<meta name="description" content="Расписание ифтаров и намазов. Рамадан 2026 — Махачкала">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- Favicon SVG -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23080d1a'/%3E%3Ccircle cx='52' cy='50' r='28' fill='%23d4af37'/%3E%3Ccircle cx='60' cy='43' r='22' fill='%23080d1a'/%3E%3C/svg%3E">
+
+<!-- Apple Touch Icon (используется при «Добавить на экран») -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23080d1a'/%3E%3Ccircle cx='266' cy='256' r='144' fill='%23d4af37'/%3E%3Ccircle cx='308' cy='220' r='112' fill='%23080d1a'/%3E%3Ccircle cx='266' cy='256' r='144' fill='none' stroke='%23f2d060' stroke-width='8' opacity='.3'/%3E%3C/svg%3E">
+
+<title>Рамадан 2026 — Махачкала</title>
+<style>
+/* ═══════════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════════ */
+:root {
+  --c-bg:          #080d1a;
+  --c-surface:     #0e1529;
+  --c-card:        rgba(255,255,255,0.035);
+  --c-card-h:      rgba(255,255,255,0.065);
+  --c-border:      rgba(255,255,255,0.07);
+  --c-border-gold: rgba(212,175,55,0.35);
+  --c-border-blue: rgba(74,158,255,0.35);
+
+  --gold:   #d4af37;
+  --gold-l: #f2d060;
+  --gold-d: #9a7a18;
+  --gold-g: rgba(212,175,55,0.18);
+
+  --blue:   #4a9eff;
+  --blue-l: #80c4ff;
+  --blue-g: rgba(74,158,255,0.14);
+
+  --red:    #ff5f5f;
+  --green:  #42e087;
+
+  --text:   #ede6d8;
+  --text-2: rgba(237,230,216,0.58);
+  --text-3: rgba(237,230,216,0.32);
+
+  --sh-gold: 0 0 28px rgba(212,175,55,0.14);
+  --sh-card: 0 8px 32px rgba(0,0,0,0.45);
+
+  --r:   16px;
+  --r-s: 10px;
+  --r-x: 6px;
+  --tr:  all .24s cubic-bezier(.4,0,.2,1);
+
+  --nav-h: 68px;
+}
+
+/* ═══════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{
+  background:var(--c-bg);
+  color:var(--text);
+  font-family:'Segoe UI',-apple-system,system-ui,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+}
+input,textarea,select,button{font-family:inherit}
+button{cursor:pointer}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--c-border);border-radius:2px}
+
+/* ═══════════════════════════════════════════════
+   AMBIENT BG
+═══════════════════════════════════════════════ */
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 55% at 15% -5%,  rgba(212,175,55,.055) 0%,transparent 60%),
+    radial-gradient(ellipse 55% 45% at 85% 105%, rgba(74,158,255,.045) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50%  50%, rgba(212,175,55,.018) 0%,transparent 70%);
+}
+
+/* ═══════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════ */
+.app-header{
+  position:sticky;top:0;z-index:100;
+  height:calc(60px + env(safe-area-inset-top, 0px));
+  padding-top:env(safe-area-inset-top, 0px);
+  padding-left:18px;padding-right:18px;
+  background:rgba(8,13,26,.95);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--c-border);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.header-brand{display:flex;align-items:center;gap:10px}
+.brand-icon{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;box-shadow:0 0 18px rgba(212,175,55,.3);flex-shrink:0;
+}
+.brand-title{
+  font-size:16px;font-weight:700;letter-spacing:.2px;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.brand-sub{font-size:10px;color:var(--text-3);letter-spacing:1.2px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:8px}
+
+.app-main{
+  position:relative;z-index:1;
+  max-width:860px;margin:0 auto;padding:20px 14px;
+}
+.section{display:none;animation:secIn .28s ease}
+.section.active{display:block}
+@keyframes secIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════════
+   BOTTOM NAV
+═══════════════════════════════════════════════ */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  height:var(--nav-h);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:rgba(8,13,26,.96);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border-top:1px solid var(--c-border);
+  display:flex;align-items:center;justify-content:space-around;z-index:200;
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px;border:none;background:none;
+  color:var(--text-3);max-width:86px;transition:var(--tr);
+  border-radius:10px;
+}
+.nav-btn .ni{font-size:19px;transition:var(--tr)}
+.nav-btn .nl{font-size:10px;font-weight:500;letter-spacing:.3px;transition:var(--tr)}
+.nav-btn.active{color:var(--gold)}
+.nav-btn.active .ni{transform:scale(1.12);filter:drop-shadow(0 0 5px rgba(212,175,55,.55))}
+
+/* ═══════════════════════════════════════════════
+   TODAY CARD
+═══════════════════════════════════════════════ */
+.today-card{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,rgba(212,175,55,.09) 0%,rgba(74,158,255,.05) 100%);
+  border:1px solid rgba(212,175,55,.22);
+  border-radius:22px;padding:26px 20px 22px;
+  margin-bottom:20px;
+  box-shadow:var(--sh-gold);
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  text-align:center;
+}
+.today-card::after{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:160px;height:160px;
+  background:radial-gradient(circle,rgba(212,175,55,.1),transparent 70%);
+  pointer-events:none;
+}
+.today-card::before{
+  content:'';position:absolute;bottom:-50px;left:-50px;
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(74,158,255,.07),transparent 70%);
+  pointer-events:none;
+}
+
+.tc-ramday-num{
+  font-size:82px;font-weight:900;line-height:1;letter-spacing:-3px;
+  background:linear-gradient(160deg,var(--gold-l) 0%,var(--gold) 45%,var(--gold-d) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 22px rgba(212,175,55,.38));
+}
+.tc-ramday-lbl{
+  font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);opacity:.75;margin-top:-10px;
+}
+.tc-sep{width:48px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.35),transparent)}
+
+.tc-greg-date{
+  font-size:18px;font-weight:700;color:var(--text);
+  letter-spacing:.3px;
+}
+
+.tc-times-row{
+  display:flex;align-items:stretch;gap:0;
+  width:100%;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;overflow:hidden;
+}
+.tc-time-block{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:4px;padding:14px 12px;
+}
+.tc-fajr-block{
+  background:rgba(74,158,255,.06);
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.tc-maghrib-block{
+  background:rgba(212,175,55,.07);
+}
+.tc-times-divider{display:none}
+.tc-time-lbl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.65}
+.tc-fajr-block   .tc-time-lbl{color:var(--blue)}
+.tc-maghrib-block .tc-time-lbl{color:var(--gold)}
+.tc-time-val{font-size:30px;font-weight:800;letter-spacing:1px}
+.tc-fajr-val   {color:var(--blue-l);text-shadow:0 0 14px rgba(74,158,255,.4)}
+.tc-maghrib-val{color:var(--gold-l);text-shadow:0 0 16px rgba(212,175,55,.5)}
+.tc-time-sub{
+  font-size:9px;color:var(--text-3);font-weight:500;
+  min-height:13px;letter-spacing:.2px;text-align:center;
+}
+
+.tc-countdown{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  min-width:180px;
+}
+.tc-countdown-label{font-size:11px;color:var(--text-2);letter-spacing:.5px}
+.tc-countdown-time{
+  font-size:34px;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-variant-numeric:tabular-nums;
+}
+.tc-countdown-time.passed{
+  background:linear-gradient(135deg,var(--green),#2ec070);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-size:22px;letter-spacing:0;
+}
+
+.tc-progress-wrap{width:100%;display:flex;flex-direction:column;gap:6px}
+.tc-progress-info{display:flex;justify-content:space-between;font-size:11px;color:var(--text-3)}
+.tc-progress-bar{
+  width:100%;height:5px;background:rgba(255,255,255,.06);
+  border-radius:3px;overflow:hidden;
+}
+.tc-progress-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-l));
+  transition:width .5s ease;
+  box-shadow:0 0 8px rgba(212,175,55,.5);
+}
+
+/* off-season */
+.tc-offseason{font-size:13px;color:var(--text-2);line-height:1.65}
+.tc-offseason strong{color:var(--gold);font-weight:700}
+.tc-moon-big{font-size:42px;opacity:.45}
+
+/* ═══════════════════════════════════════════════
+   SECTION HEADER
+═══════════════════════════════════════════════ */
+.sec-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;flex-wrap:wrap;gap:10px;
+}
+.sec-title{
+  font-size:20px;font-weight:700;
+  background:linear-gradient(135deg,var(--text),var(--text-2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ═══════════════════════════════════════════════
+   NOTIFICATION BUTTON
+═══════════════════════════════════════════════ */
+.notif-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 12px;border-radius:20px;
+  border:1px solid var(--c-border);
+  background:var(--c-card);
+  color:var(--text-2);font-size:12px;font-weight:600;
+  transition:var(--tr);letter-spacing:.3px;white-space:nowrap;
+}
+.notif-btn:hover{border-color:rgba(212,175,55,.3);color:var(--gold);background:rgba(212,175,55,.06)}
+.notif-btn.enabled{border-color:rgba(66,224,135,.3);color:var(--green);background:rgba(66,224,135,.06)}
+.notif-btn .nb-icon{font-size:15px;line-height:1}
+.notif-btn .nb-txt{font-size:11px;}
+.notif-btn .nb-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--text-3);
+  transition:var(--tr);flex-shrink:0;
+}
+.notif-btn.enabled .nb-dot{background:var(--green);box-shadow:0 0 6px rgba(66,224,135,.6)}
+/* На маленьких экранах — только иконка */
+@media(max-width:400px){
+  .notif-btn .nb-txt{display:none}
+  .notif-btn{padding:8px 10px}
+}
+
+/* ═══════════════════════════════════════════════
+   LEGEND
+═══════════════════════════════════════════════ */
+.legend{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.legend-item{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 12px;
+  background:var(--c-card);border:1px solid var(--c-border);
+  border-radius:20px;font-size:12px;color:var(--text-2);
+}
+.ldot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ldot-e   {background:rgba(255,255,255,.18)}
+.ldot-h   {background:var(--gold);box-shadow:0 0 5px rgba(212,175,55,.6)}
+.ldot-g   {background:var(--blue);box-shadow:0 0 5px rgba(74,158,255,.6)}
+.ldot-home{background:#42e087;   box-shadow:0 0 5px rgba(66,224,135,.6)}
+.ldot-work{background:#c49aff;   box-shadow:0 0 5px rgba(180,130,255,.6)}
+.ldot-mosque{background:#ff9f43; box-shadow:0 0 5px rgba(255,159,67,.6)}
+
+/* ═══════════════════════════════════════════════
+   CALENDAR GRID — iPhone 15 Pro (393px)
+   4 колонки: ~82px карточка при padding 11px + gap 7px
+═══════════════════════════════════════════════ */
+.cal-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;margin-bottom:16px;
+}
+@media(min-width:520px){.cal-grid{grid-template-columns:repeat(5,1fr);gap:9px}}
+@media(max-width:320px){.cal-grid{grid-template-columns:repeat(3,1fr);gap:5px}}
+
+.cal-card{
+  aspect-ratio:unset;
+  min-height:84px;
+  background:var(--c-card);border:1px solid var(--c-border);
+  border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;padding:6px 4px;
+  cursor:pointer;transition:var(--tr);position:relative;overflow:hidden;
+  animation:cIn .4s ease both;
+}
+@keyframes cIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.cal-card:hover{transform:translateY(-2px);box-shadow:var(--sh-card);border-color:rgba(255,255,255,.13)}
+
+.cal-card.st-host{background:rgba(212,175,55,.09);border-color:rgba(212,175,55,.38);box-shadow:0 0 18px rgba(212,175,55,.09)}
+.cal-card.st-host:hover{box-shadow:0 0 28px rgba(212,175,55,.18),var(--sh-card)}
+.cal-card.st-guest{background:rgba(74,158,255,.09);border-color:rgba(74,158,255,.38);box-shadow:0 0 18px rgba(74,158,255,.09)}
+.cal-card.st-guest:hover{box-shadow:0 0 28px rgba(74,158,255,.18),var(--sh-card)}
+.cal-card.st-home{background:rgba(66,224,135,.07);border-color:rgba(66,224,135,.32);box-shadow:0 0 18px rgba(66,224,135,.07)}
+.cal-card.st-home:hover{box-shadow:0 0 28px rgba(66,224,135,.16),var(--sh-card)}
+.cal-card.st-work{background:rgba(180,130,255,.07);border-color:rgba(180,130,255,.32);box-shadow:0 0 18px rgba(180,130,255,.07)}
+.cal-card.st-work:hover{box-shadow:0 0 28px rgba(180,130,255,.16),var(--sh-card)}
+.cal-card.st-mosque{background:rgba(255,159,67,.07);border-color:rgba(255,159,67,.32);box-shadow:0 0 18px rgba(255,159,67,.07)}
+.cal-card.st-mosque:hover{box-shadow:0 0 28px rgba(255,159,67,.16),var(--sh-card)}
+.cal-card.today{outline:2px solid rgba(212,175,55,.5);outline-offset:-2px}
+
+/* 30 Шаабан */
+.cal-card.st-shaaban{
+  background:rgba(167,139,250,.07);
+  border-color:rgba(167,139,250,.28);
+  border-style:dashed;
+}
+.cal-card.st-shaaban:hover{
+  background:rgba(167,139,250,.13);
+  border-color:rgba(167,139,250,.45);
+  box-shadow:0 0 22px rgba(167,139,250,.15),var(--sh-card);
+}
+.cal-card.st-shaaban.sha-tar{
+  background:rgba(167,139,250,.12);
+  border-color:rgba(167,139,250,.42);
+  border-style:solid;
+}
+.sha-num{color:#c4b5fd !important}
+.sha-sub{
+  font-size:9px !important;letter-spacing:1px;
+  text-transform:uppercase;color:rgba(196,181,253,.55) !important;
+  font-weight:700;
+}
+
+/* Числа дней */
+.cal-card .cc-num{font-size:22px;font-weight:800;line-height:1}
+.cal-card.st-host   .cc-num{color:var(--gold-l)}
+.cal-card.st-guest  .cc-num{color:var(--blue-l)}
+.cal-card.st-home   .cc-num{color:#7dffb8}
+.cal-card.st-work   .cc-num{color:#d4aaff}
+.cal-card.st-mosque .cc-num{color:#ffbe76}
+.cal-card:not(.st-host):not(.st-guest):not(.st-home):not(.st-work):not(.st-mosque):not(.st-shaaban) .cc-num{color:var(--text-2)}
+
+/* Дата — число и месяц */
+.cal-card .cc-date{font-size:9px;color:var(--text-3);font-weight:500;line-height:1.3;text-align:center}
+.cal-card.st-host   .cc-date{color:rgba(212,175,55,.7)}
+.cal-card.st-guest  .cc-date{color:rgba(74,158,255,.7)}
+.cal-card.st-home   .cc-date{color:rgba(66,224,135,.6)}
+.cal-card.st-work   .cc-date{color:rgba(180,130,255,.6)}
+.cal-card.st-mosque .cc-date{color:rgba(255,159,67,.6)}
+
+/* День недели */
+.cal-card .cc-dow{font-size:8px;color:var(--text-3);font-weight:600;text-transform:lowercase;opacity:.65;line-height:1.2;text-align:center}
+.cal-card.st-host   .cc-dow{color:rgba(212,175,55,.5)}
+.cal-card.st-guest  .cc-dow{color:rgba(74,158,255,.5)}
+.cal-card.st-home   .cc-dow{color:rgba(66,224,135,.45)}
+.cal-card.st-work   .cc-dow{color:rgba(180,130,255,.45)}
+.cal-card.st-mosque .cc-dow{color:rgba(255,159,67,.45)}
+
+/* Время Магриба */
+.cal-card .cc-mag{font-size:9px;font-weight:700;letter-spacing:.3px}
+.cal-card.st-host   .cc-mag{color:var(--gold)}
+.cal-card.st-guest  .cc-mag{color:var(--blue)}
+.cal-card.st-home   .cc-mag{color:#42e087}
+.cal-card.st-work   .cc-mag{color:#c49aff}
+.cal-card.st-mosque .cc-mag{color:#ff9f43}
+.cal-card:not(.st-host):not(.st-guest):not(.st-home):not(.st-work):not(.st-mosque):not(.st-shaaban) .cc-mag{color:var(--text-3)}
+
+.cal-card .cc-dot{
+  position:absolute;bottom:4px;right:4px;
+  width:5px;height:5px;border-radius:50%;
+}
+.cal-card.st-host   .cc-dot{background:var(--gold);box-shadow:0 0 4px var(--gold)}
+.cal-card.st-guest  .cc-dot{background:var(--blue);box-shadow:0 0 4px var(--blue)}
+.cal-card.st-home   .cc-dot{background:#42e087;box-shadow:0 0 4px #42e087}
+.cal-card.st-work   .cc-dot{background:#c49aff;box-shadow:0 0 4px #c49aff}
+.cal-card.st-mosque .cc-dot{background:#ff9f43;box-shadow:0 0 4px #ff9f43}
+
+.cc-badges{
+  position:absolute;top:3px;left:3px;
+  display:flex;gap:1px;
+}
+.cc-badge{font-size:8px;line-height:1;opacity:.85}
+
+/* ═══════════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════════ */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:10px;margin-bottom:18px;
+}
+@media(min-width:580px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+.stat-card{
+  background:var(--c-card);border:1px solid var(--c-border);
+  border-radius:var(--r-s);padding:16px 14px;
+  display:flex;flex-direction:column;gap:7px;
+  transition:var(--tr);animation:secIn .4s ease both;
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--sh-card)}
+.stat-card .s-icon{font-size:24px}
+.stat-card .s-val{
+  font-size:28px;font-weight:800;line-height:1;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-card.sc-blue .s-val{background:linear-gradient(135deg,var(--blue-l),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-card.sc-green .s-val{background:linear-gradient(135deg,#80ffba,var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-card .s-lbl{font-size:11px;color:var(--text-3);font-weight:500}
+
+.chart-wrap{
+  background:var(--c-card);border:1px solid var(--c-border);
+  border-radius:var(--r);padding:18px;margin-bottom:18px;
+}
+.chart-title{font-size:14px;font-weight:600;color:var(--text-2);margin-bottom:14px}
+canvas{width:100%!important;border-radius:6px}
+
+/* ═══════════════════════════════════════════════
+   DATA SECTION
+═══════════════════════════════════════════════ */
+.data-list{display:flex;flex-direction:column;gap:10px}
+.data-row{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;
+  background:var(--c-card);border:1px solid var(--c-border);
+  border-radius:var(--r-s);
+  transition:var(--tr);color:var(--text);
+}
+.data-row:hover{background:var(--c-card-h);border-color:rgba(255,255,255,.12);transform:translateX(4px)}
+.data-row.danger:hover{border-color:rgba(255,95,95,.28);background:rgba(255,95,95,.05)}
+.data-row label{cursor:pointer;display:flex;align-items:center;gap:14px;width:100%}
+.d-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.di-ex{background:rgba(212,175,55,.14)}
+.di-im{background:rgba(74,158,255,.14)}
+.di-cl{background:rgba(255,95,95,.14)}
+.d-title{font-size:14px;font-weight:600;margin-bottom:2px}
+.d-sub  {font-size:11px;color:var(--text-3)}
+#importFile{display:none}
+
+/* ═══════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════ */
+.btn{
+  padding:10px 18px;border-radius:var(--r-s);
+  font-size:13px;font-weight:600;border:none;
+  transition:var(--tr);display:inline-flex;align-items:center;gap:7px;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  color:#06080e;
+  box-shadow:0 4px 18px rgba(212,175,55,.24);
+}
+.btn-primary:hover{box-shadow:0 6px 28px rgba(212,175,55,.38);transform:translateY(-1px)}
+.btn-ghost{background:var(--c-card);border:1px solid var(--c-border);color:var(--text-2)}
+.btn-ghost:hover{background:var(--c-card-h);color:var(--text)}
+.btn-danger{background:rgba(255,95,95,.1);border:1px solid rgba(255,95,95,.28);color:var(--red)}
+.btn-danger:hover{background:rgba(255,95,95,.18)}
+
+/* ═══════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════ */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(7px);
+  z-index:500;display:flex;align-items:center;justify-content:center;
+  padding:18px;opacity:0;transition:opacity .24s ease;pointer-events:none;
+}
+.overlay.show{opacity:1;pointer-events:all}
+.modal{
+  background:#0d1626;border:1px solid var(--c-border);
+  border-radius:20px;width:100%;max-width:480px;
+  max-height:90vh;overflow-y:auto;
+  transform:scale(.95) translateY(10px);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 20px 60px rgba(0,0,0,.55),var(--sh-gold);
+}
+.overlay.show .modal{transform:scale(1) translateY(0)}
+.modal-head{
+  padding:20px 22px 0;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+  margin-bottom:16px;
+}
+.modal-title{font-size:17px;font-weight:700;line-height:1.3}
+.modal-sub{font-size:12px;color:var(--text-3);margin-top:3px}
+.mclose{
+  width:30px;height:30px;border:1px solid var(--c-border);
+  background:var(--c-card);border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--text-2);transition:var(--tr);flex-shrink:0;
+}
+.mclose:hover{background:var(--c-card-h);color:var(--text)}
+.modal-body{padding:0 22px 22px}
+.modal-foot{
+  padding:14px 22px;border-top:1px solid var(--c-border);
+  display:flex;gap:9px;justify-content:flex-end;
+}
+
+/* ═══════════════════════════════════════════════
+   PRAYER TIMES TABLE (in modal)
+═══════════════════════════════════════════════ */
+.prayer-table{
+  width:100%;border-collapse:collapse;margin-bottom:16px;
+  border-radius:var(--r-s);overflow:hidden;
+}
+.prayer-table th{
+  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-3);padding:8px 10px;background:rgba(255,255,255,.025);
+  text-align:left;
+}
+.prayer-table td{
+  font-size:14px;font-weight:600;padding:10px 10px;
+  border-top:1px solid rgba(255,255,255,.04);color:var(--text);
+}
+.prayer-table tr.maghrib-row td{
+  color:var(--gold-l);
+  text-shadow:0 0 10px rgba(212,175,55,.35);
+}
+.prayer-table tr.maghrib-row td:first-child::after{content:' ✦';color:var(--gold);font-size:11px}
+
+/* ═══════════════════════════════════════════════
+   TYPE TOGGLE — 4 варианта
+═══════════════════════════════════════════════ */
+.type-toggle{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.type-toggle .tt-btn:last-child:nth-child(odd){
+  grid-column: 1 / -1;
+}
+.tt-btn{
+  padding:10px 8px;border-radius:var(--r-s);
+  border:1px solid var(--c-border);background:rgba(255,255,255,.025);
+  font-size:12px;font-weight:600;color:var(--text-3);transition:var(--tr);
+  line-height:1.3;text-align:center;
+}
+.tt-btn:hover{background:rgba(255,255,255,.055);color:var(--text-2)}
+.tt-btn.act-host  {background:rgba(212,175,55,.13);border-color:rgba(212,175,55,.35);color:var(--gold);box-shadow:0 0 12px rgba(212,175,55,.1)}
+.tt-btn.act-guest {background:rgba(74,158,255,.13); border-color:rgba(74,158,255,.35); color:var(--blue);box-shadow:0 0 12px rgba(74,158,255,.1)}
+.tt-btn.act-home  {background:rgba(66,224,135,.1);  border-color:rgba(66,224,135,.3);  color:#42e087;   box-shadow:0 0 12px rgba(66,224,135,.1)}
+.tt-btn.act-work  {background:rgba(180,130,255,.1); border-color:rgba(180,130,255,.3); color:#c49aff;   box-shadow:0 0 12px rgba(180,130,255,.1)}
+.tt-btn.act-mosque{background:rgba(255,159,67,.1);  border-color:rgba(255,159,67,.3);  color:#ff9f43;   box-shadow:0 0 12px rgba(255,159,67,.1)}
+
+/* ═══════════════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════════════ */
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px}
+.fc{
+  width:100%;background:rgba(255,255,255,.035);
+  border:1px solid var(--c-border);border-radius:var(--r-s);
+  padding:10px 13px;color:var(--text);font-size:14px;transition:var(--tr);
+  -webkit-appearance:none;
+}
+.fc:focus{outline:none;border-color:rgba(212,175,55,.38);background:rgba(255,255,255,.055)}
+.fc::placeholder{color:var(--text-3)}
+textarea.fc{resize:vertical;min-height:72px}
+
+/* ═══════════════════════════════════════════════
+   PRAYER CHECKBOXES
+═══════════════════════════════════════════════ */
+.prayer-checks{display:flex;flex-direction:column;gap:8px}
+.pcheck-label{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;cursor:pointer;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--c-border);
+  border-radius:var(--r-s);transition:var(--tr);
+  user-select:none;
+}
+.pcheck-label:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
+.pcheck-label input[type=checkbox]{display:none}
+.pcheck-box{
+  width:20px;height:20px;border-radius:6px;flex-shrink:0;
+  border:1.5px solid var(--c-border);
+  background:rgba(255,255,255,.04);
+  transition:var(--tr);
+  display:flex;align-items:center;justify-content:center;
+}
+.pcheck-box::after{
+  content:'✓';font-size:12px;font-weight:800;
+  color:transparent;transition:var(--tr);
+}
+.pcheck-label input:checked ~ .pcheck-box{
+  background:rgba(212,175,55,.18);
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 0 8px rgba(212,175,55,.2);
+}
+.pcheck-label input:checked ~ .pcheck-box::after{color:var(--gold-l)}
+.pcheck-label input:checked ~ .pcheck-text{color:var(--text)}
+.pcheck-icon{font-size:16px}
+.pcheck-text{font-size:13px;font-weight:600;color:var(--text-2);transition:var(--tr)}
+/* Таравих — другой цвет */
+#lblTarawih input:checked ~ .pcheck-box{
+  background:rgba(74,158,255,.14);
+  border-color:rgba(74,158,255,.45);
+  box-shadow:0 0 8px rgba(74,158,255,.18);
+}
+#lblTarawih input:checked ~ .pcheck-box::after{color:var(--blue-l)}
+
+/* ═══════════════════════════════════════════════
+   CONFIRM
+═══════════════════════════════════════════════ */
+#confirmOverlay .modal{max-width:340px}
+.conf-icon{font-size:38px;text-align:center;margin-bottom:10px}
+.conf-text{text-align:center;font-size:14px;color:var(--text-2);line-height:1.55}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+#toasts{
+  position:fixed;top:72px;right:14px;z-index:1000;
+  display:flex;flex-direction:column;gap:7px;pointer-events:none;
+}
+.toast{
+  padding:11px 15px;background:#18243e;
+  border:1px solid var(--c-border);border-radius:11px;
+  font-size:12px;font-weight:500;color:var(--text);
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
+  display:flex;align-items:center;gap:8px;min-width:190px;
+  transform:translateX(115%);transition:transform .28s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:all;
+}
+.toast.show{transform:translateX(0)}
+.toast.ok  {border-color:rgba(66,224,135,.28)}
+.toast.err {border-color:rgba(255,95,95,.28)}
+.toast.inf {border-color:rgba(212,175,55,.28)}
+
+/* ═══════════════════════════════════════════════
+   INSTALL BANNER
+═══════════════════════════════════════════════ */
+#installBanner{
+  display:none;align-items:center;gap:12px;
+  padding:13px 15px;margin-bottom:14px;
+  background:rgba(212,175,55,.07);
+  border:1px solid rgba(212,175,55,.2);
+  border-radius:var(--r-s);cursor:pointer;transition:var(--tr);
+}
+#installBanner.show{display:flex}
+#installBanner:hover{border-color:rgba(212,175,55,.35)}
+.ib-icon{font-size:22px}
+.ib-title{font-size:13px;font-weight:600;color:var(--gold)}
+.ib-sub  {font-size:10px;color:var(--text-3)}
+.ib-close{margin-left:auto;font-size:17px;color:var(--text-3);padding:3px;line-height:1}
+
+/* 30 Шаабан — модал */
+.sha30-banner{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  background:rgba(167,139,250,.08);
+  border:1px solid rgba(167,139,250,.25);
+  border-radius:var(--r-s);
+}
+.sha30-icon{font-size:28px}
+.sha30-ttl{font-size:14px;font-weight:700;color:#c4b5fd;margin-bottom:3px}
+.sha30-sub{font-size:11px;color:var(--text-3);line-height:1.4}
+.pcheck-sha input:checked ~ .pcheck-box{
+  background:rgba(167,139,250,.18) !important;
+  border-color:rgba(167,139,250,.55) !important;
+  box-shadow:0 0 8px rgba(167,139,250,.22) !important;
+}
+.pcheck-sha input:checked ~ .pcheck-box::after{color:#c4b5fd !important}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media(max-width:480px){
+  .app-main{padding:14px 11px}
+  .tc-ramday-num{font-size:66px}
+  .tc-countdown-time{font-size:28px}
+  .tc-time-val{font-size:24px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .stat-card{padding:13px 11px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-brand">
+    <div class="brand-icon">🌙</div>
+    <div>
+      <div class="brand-title">Рамадан 2026</div>
+      <div class="brand-sub">Махачкала</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="notif-btn" id="notifBtn">
+      <span class="nb-icon">🔔</span>
+      <span class="nb-dot"></span>
+      <span class="nb-txt" id="notifLabel">Уведомления</span>
+    </button>
+  </div>
+</header>
+
+<!-- TOASTS -->
+<div id="toasts"></div>
+
+<!-- MAIN -->
+<main class="app-main">
+
+  <!-- ── CALENDAR / HOME ── -->
+  <section id="secHome" class="section active">
+    <div class="today-card" id="todayCard"></div>
+
+    <div id="installBanner">
+      <span class="ib-icon">📲</span>
+      <div><div class="ib-title">Установить приложение</div><div class="ib-sub">Добавить на главный экран</div></div>
+      <span class="ib-close" id="ibClose">✕</span>
+    </div>
+
+    <div class="sec-header">
+      <div class="sec-title">📅 Календарь Рамадана (Ифтары)</div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="ldot ldot-e"></span>Пусто</div>
+      <div class="legend-item"><span class="ldot ldot-h"></span>Я приглашаю</div>
+      <div class="legend-item"><span class="ldot ldot-g"></span>Меня пригласили</div>
+      <div class="legend-item"><span class="ldot ldot-home"></span>Дома с семьёй</div>
+      <div class="legend-item"><span class="ldot ldot-work"></span>На работе</div>
+      <div class="legend-item"><span class="ldot ldot-mosque"></span>В мечети</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <section id="secStats" class="section">
+    <div class="sec-header"><div class="sec-title">📊 Статистика</div></div>
+    <div class="stats-grid" id="statsGrid"></div>
+    <div class="chart-wrap">
+      <div class="chart-title">Распределение ифтаров по дням</div>
+      <canvas id="chart" height="155"></canvas>
+    </div>
+  </section>
+
+  <!-- ── DATA ── -->
+  <section id="secData" class="section">
+    <div class="sec-header"><div class="sec-title">💾 Данные</div></div>
+    <div class="data-list">
+      <div class="data-row" id="exportBtn">
+        <div class="d-icon di-ex">📤</div>
+        <div><div class="d-title">Экспорт данных</div><div class="d-sub">Сохранить все записи в JSON</div></div>
+      </div>
+      <div class="data-row">
+        <label for="importFile">
+          <div class="d-icon di-im">📥</div>
+          <div><div class="d-title">Импорт данных</div><div class="d-sub">Загрузить записи из JSON файла</div></div>
+        </label>
+      </div>
+      <input type="file" id="importFile" accept=".json">
+      <div class="data-row danger" id="clearBtn">
+        <div class="d-icon di-cl">🗑️</div>
+        <div><div class="d-title">Очистить все данные</div><div class="d-sub">Удалить все записи безвозвратно</div></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-sec="secHome">
+    <span class="ni">🌙</span><span class="nl">Сегодня</span>
+  </button>
+  <button class="nav-btn" data-sec="secStats">
+    <span class="ni">📊</span><span class="nl">Статистика</span>
+  </button>
+  <button class="nav-btn" data-sec="secData">
+    <span class="ni">💾</span><span class="nl">Данные</span>
+  </button>
+</nav>
+
+<!-- DAY MODAL -->
+<div class="overlay" id="dayOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="dmTitle">День 1 — 19 февраля</div>
+        <div class="modal-sub" id="dmSub">Рамадан 2026 · Махачкала</div>
+      </div>
+      <button class="mclose" data-close="dayOverlay">✕</button>
+    </div>
+    <div class="modal-body">
+      <table class="prayer-table" id="prayerTable">
+        <thead><tr><th>Намаз</th><th>Время</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="fg">
+        <label class="fl">Тип ифтара</label>
+        <div class="type-toggle">
+          <button class="tt-btn act-host" id="ttHost">🌟 Я приглашаю</button>
+          <button class="tt-btn"          id="ttGuest">🤲 Меня пригласили</button>
+          <button class="tt-btn"          id="ttHome">🏠 Дома с семьёй</button>
+          <button class="tt-btn"          id="ttWork">💼 На работе</button>
+          <button class="tt-btn"          id="ttMosque">🕌 В мечети</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Намазы в мечети</label>
+        <div class="prayer-checks">
+          <label class="pcheck-label" id="lblFajrMosque">
+            <input type="checkbox" id="chkFajrMosque">
+            <span class="pcheck-box"></span>
+            <span class="pcheck-icon">🌅</span>
+            <span class="pcheck-text">Фаджр в мечети</span>
+          </label>
+          <label class="pcheck-label" id="lblTarawih">
+            <input type="checkbox" id="chkTarawih">
+            <span class="pcheck-box"></span>
+            <span class="pcheck-icon">✨</span>
+            <span class="pcheck-text">Таравих в мечети</span>
+          </label>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl" for="fGuests">Гости</label>
+        <input type="text" class="fc" id="fGuests" placeholder="Имена через запятую...">
+      </div>
+      <div class="fg">
+        <label class="fl" for="fLocation">Локация</label>
+        <input type="text" class="fc" id="fLocation" placeholder="Дом, ресторан, мечеть...">
+      </div>
+      <div class="fg">
+        <label class="fl" for="fNotes">Заметки</label>
+        <textarea class="fc" id="fNotes" placeholder="Дополнительно..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-danger" id="dmDelete" style="margin-right:auto;display:none">Удалить</button>
+      <button class="btn btn-ghost" data-close="dayOverlay">Отмена</button>
+      <button class="btn btn-primary" id="dmSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- SHAABAN30 MODAL -->
+<div class="overlay" id="sha30Overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">30 Шаабан — 18 февраля</div>
+        <div class="modal-sub">Вечер первого Таравиха · Рамадан начинается завтра</div>
+      </div>
+      <button class="mclose" data-close="sha30Overlay">✕</button>
+    </div>
+    <div class="modal-body">
+      <table class="prayer-table">
+        <thead><tr><th>Намаз</th><th>Время</th></tr></thead>
+        <tbody>
+          <tr><td>Фаджр</td><td>05:10</td></tr>
+          <tr><td>Восход</td><td>06:41</td></tr>
+          <tr><td>Зухр</td><td>12:08</td></tr>
+          <tr><td>Аср</td><td>14:58</td></tr>
+          <tr class="maghrib-row"><td>Магриб</td><td>17:28</td></tr>
+          <tr><td>Иша</td><td>18:43</td></tr>
+        </tbody>
+      </table>
+      <div class="sha30-banner">
+        <div class="sha30-icon">🌙</div>
+        <div class="sha30-txt">
+          <div class="sha30-ttl">Первый Таравих Рамадана</div>
+          <div class="sha30-sub">Совершается после намаза Иша вечером 30 Шаабана</div>
+        </div>
+      </div>
+      <div class="fg" style="margin-top:14px">
+        <label class="fl">Отметить</label>
+        <div class="prayer-checks">
+          <label class="pcheck-label pcheck-sha" id="lblSha30Tarawih">
+            <input type="checkbox" id="chkSha30Tarawih">
+            <span class="pcheck-box pcheck-box-sha"></span>
+            <span class="pcheck-icon">✨</span>
+            <span class="pcheck-text">Первый Таравих в мечети</span>
+          </label>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl" for="fSha30Notes">Заметки</label>
+        <textarea class="fc" id="fSha30Notes" placeholder="Заметки о первом Таравихе..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="sha30Overlay">Отмена</button>
+      <button class="btn btn-primary" id="sha30Save">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="overlay" id="confirmOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="confTitle">Подтверждение</div>
+      <button class="mclose" data-close="confirmOverlay">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="conf-icon" id="confIcon">⚠️</div>
+      <div class="conf-text" id="confText"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="confirmOverlay">Отмена</button>
+      <button class="btn btn-danger" id="confOk">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+/* ──────────────────────────────────────────────
+   MODULE: prayers  — фиксированные данные 2026
+────────────────────────────────────────────── */
+const prayers = (() => {
+  /*
+   * Хранит 30 дней Рамадана 2026, Махачкала.
+   * Индекс 0 = 1 Рамадан = 19 февраля 2026
+   * Порядок: [fajr, sunrise, zuhr, asr, maghrib, isha]
+   */
+  const DATA = [
+    ['05:09','06:40','12:08','14:59','17:30','18:44'], // 1  — 19 фев
+    ['05:08','06:38','12:08','15:00','17:32','18:46'], // 2  — 20 фев
+    ['05:07','06:37','12:08','15:01','17:33','18:47'], // 3  — 21 фев
+    ['05:05','06:35','12:08','15:02','17:34','18:48'], // 4  — 22 фев
+    ['05:04','06:34','12:08','15:03','17:36','18:49'], // 5  — 23 фев
+    ['05:02','06:32','12:08','15:04','17:37','18:50'], // 6  — 24 фев
+    ['05:01','06:31','12:08','15:05','17:38','18:52'], // 7  — 25 фев
+    ['04:59','06:29','12:07','15:06','17:39','18:53'], // 8  — 26 фев
+    ['04:58','06:28','12:07','15:07','17:41','18:54'], // 9  — 27 фев
+    ['04:56','06:26','12:07','15:07','17:42','18:55'], // 10 — 28 фев
+    ['04:54','06:24','12:07','15:08','17:43','18:56'], // 11 —  1 мар
+    ['04:53','06:23','12:07','15:09','17:44','18:58'], // 12 —  2 мар
+    ['04:51','06:21','12:07','15:10','17:46','18:59'], // 13 —  3 мар
+    ['04:49','06:19','12:06','15:11','17:47','19:00'], // 14 —  4 мар
+    ['04:48','06:18','12:06','15:12','17:48','19:01'], // 15 —  5 мар
+    ['04:46','06:16','12:06','15:12','17:49','19:03'], // 16 —  6 мар
+    ['04:44','06:14','12:06','15:13','17:51','19:04'], // 17 —  7 мар
+    ['04:43','06:13','12:05','15:14','17:52','19:05'], // 18 —  8 мар
+    ['04:41','06:11','12:05','15:15','17:53','19:06'], // 19 —  9 мар
+    ['04:39','06:09','12:05','15:15','17:54','19:07'], // 20 — 10 мар
+    ['04:37','06:08','12:05','15:16','17:55','19:09'], // 21 — 11 мар
+    ['04:36','06:06','12:04','15:17','17:57','19:10'], // 22 — 12 мар
+    ['04:34','06:04','12:04','15:18','17:58','19:11'], // 23 — 13 мар
+    ['04:32','06:02','12:04','15:18','17:59','19:12'], // 24 — 14 мар
+    ['04:30','06:01','12:04','15:19','18:00','19:14'], // 25 — 15 мар
+    ['04:28','05:59','12:03','15:20','18:01','19:15'], // 26 — 16 мар
+    ['04:26','05:57','12:03','15:20','18:03','19:16'], // 27 — 17 мар
+    ['04:24','05:55','12:03','15:21','18:04','19:17'], // 28 — 18 мар
+    ['04:23','05:54','12:02','15:22','18:05','19:19'], // 29 — 19 мар
+    ['04:21','05:52','12:02','15:22','18:06','19:20'], // 30 — 20 мар
+  ];
+
+  // Начало Рамадана: 19 февраля 2026
+  const RAMADAN_START = new Date(2026, 1, 19); // month 1 = февраль
+  // 30 Шаабан: 18 февраля 2026 — вечер первого Таравиха
+  const SHAABAN30_DATE = new Date(2026, 1, 18);
+  // Данные намаза для 30 Шаабана (18 фев 2026) — экстраполируем от дня 1
+  const SHA30_DATA = ['05:10','06:41','12:08','14:58','17:28','18:43'];
+
+  function isShaaban30(date) {
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const s = new Date(2026, 1, 18);
+    return d.getTime() === s.getTime();
+  }
+
+  function getShaaban30() {
+    return {
+      ramDay:  0,
+      calDate: SHAABAN30_DATE,
+      fajr:    SHA30_DATA[0],
+      sunrise: SHA30_DATA[1],
+      zuhr:    SHA30_DATA[2],
+      asr:     SHA30_DATA[3],
+      maghrib: SHA30_DATA[4],
+      isha:    SHA30_DATA[5],
+    };
+  }
+
+  const NAMES = ['Фаджр','Восход','Зухр','Аср','Магриб','Иша'];
+  const KEYS  = ['fajr','sunrise','zuhr','asr','maghrib','isha'];
+
+  // Дата → день Рамадана (1..30) или null
+  function ramadanDayOf(date) {
+    const d0 = new Date(RAMADAN_START.getFullYear(), RAMADAN_START.getMonth(), RAMADAN_START.getDate());
+    const d1 = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const diff = Math.round((d1 - d0) / 86400000);
+    if (diff < 0 || diff > 29) return null;
+    return diff + 1;
+  }
+
+  // Получить данные для дня Рамадана (1..30)
+  function getDay(ramDay) {
+    const idx = ramDay - 1;
+    const row = DATA[idx];
+    const calDate = new Date(RAMADAN_START);
+    calDate.setDate(RAMADAN_START.getDate() + idx);
+    return {
+      ramDay,
+      calDate,
+      fajr:    row[0],
+      sunrise: row[1],
+      zuhr:    row[2],
+      asr:     row[3],
+      maghrib: row[4],
+      isha:    row[5],
+    };
+  }
+
+  // Разобрать "HH:MM" в минуты от начала дня
+  function parseTime(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 60 + m;
+  }
+
+  // Сколько секунд осталось до Магриба сегодня
+  function secondsToMaghrib(ramDay) {
+    const row     = DATA[ramDay - 1];
+    const maghrib = parseTime(row[4]);
+    const now     = new Date();
+    const nowMins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+    const diff    = (maghrib - nowMins) * 60;
+    return diff;
+  }
+
+  // Сколько секунд осталось до Фаджра (окончания сухура) сегодня
+  function secondsToFajr(ramDay) {
+    const row     = DATA[ramDay - 1];
+    const fajr    = parseTime(row[0]);
+    const now     = new Date();
+    const nowMins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+    const diff    = (fajr - nowMins) * 60;
+    return diff;
+  }
+
+  // Форматировать дату из Date в "дд месяц"
+  function formatShortDate(date) {
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+  }
+
+  // Полный день недели: понедельник, вторник...
+  function formatDayOfWeek(date) {
+    return date.toLocaleDateString('ru-RU', { weekday: 'long' });
+  }
+
+  // Форматировать дату в "дд месяц год"
+  function formatFullDate(date) {
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  return { DATA, NAMES, KEYS, RAMADAN_START, SHAABAN30_DATE, ramadanDayOf, isShaaban30, getShaaban30, getDay, parseTime, secondsToMaghrib, secondsToFajr, formatShortDate, formatDayOfWeek, formatFullDate };
+})();
+
+/* ──────────────────────────────────────────────
+   MODULE: state
+────────────────────────────────────────────── */
+const state = (() => {
+  const _s = {
+    iftars:       {},      // { "1": { type, guests, location, notes } }
+    editingDay:   null,
+    currentType:  'host',
+    notifEnabled: false,
+    deferredPWA:  null,
+  };
+  return _s;
+})();
+
+/* ──────────────────────────────────────────────
+   MODULE: storage
+────────────────────────────────────────────── */
+const storage = {
+  KEY: 'ramadan2026_mah',
+  save() {
+    try { localStorage.setItem(this.KEY, JSON.stringify(state.iftars)); } catch(e) {}
+  },
+  load() {
+    try {
+      const d = localStorage.getItem(this.KEY);
+      if (d) state.iftars = JSON.parse(d);
+    } catch(e) {}
+  },
+  clear() {
+    localStorage.removeItem(this.KEY);
+    state.iftars = {};
+  },
+};
+
+/* ──────────────────────────────────────────────
+   MODULE: notifications
+────────────────────────────────────────────── */
+const notifications = {
+  async request() {
+    if (!('Notification' in window)) {
+      toast('Уведомления не поддерживаются браузером', 'err');
+      return false;
+    }
+    const perm = await Notification.requestPermission();
+    const ok   = perm === 'granted';
+    state.notifEnabled = ok;
+    updateNotifBtn();
+    if (ok) {
+      toast('Уведомления включены ✓', 'ok');
+      this.scheduleToday();
+    } else {
+      toast('Доступ к уведомлениям отклонён', 'err');
+    }
+    return ok;
+  },
+
+  scheduleToday() {
+    const today  = new Date();
+    const ramDay = prayers.ramadanDayOf(today);
+    if (!ramDay) return;
+
+    const dayData = prayers.getDay(ramDay);
+    const [h, m]  = dayData.maghrib.split(':').map(Number);
+
+    // Напоминание за 10 минут
+    const targetDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), h, m - 10, 0);
+    const delta      = targetDate.getTime() - Date.now();
+
+    if (delta > 0) {
+      setTimeout(() => {
+        if (state.notifEnabled && Notification.permission === 'granted') {
+          new Notification('🌙 Рамадан 2026 — Ифтар через 10 минут', {
+            body: `Магриб в ${dayData.maghrib} · Махачкала`,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23080d1a" width="100" height="100" rx="22"/><text y=".9em" x="12" font-size="76">🌙</text></svg>',
+            tag:  'iftar-reminder',
+            requireInteraction: true,
+          });
+        }
+      }, delta);
+    }
+  },
+
+  toggle() {
+    if (state.notifEnabled) {
+      state.notifEnabled = false;
+      updateNotifBtn();
+      toast('Уведомления отключены', 'inf');
+    } else {
+      this.request();
+    }
+  },
+};
+
+/* ──────────────────────────────────────────────
+   HELPERS
+────────────────────────────────────────────── */
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function pad2(n) { return String(n).padStart(2, '0'); }
+function fmtCountdown(secs) {
+  if (secs <= 0) return null;
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = Math.floor(secs % 60);
+  return h > 0 ? `${pad2(h)}:${pad2(m)}:${pad2(s)}` : `${pad2(m)}:${pad2(s)}`;
+}
+
+/* ──────────────────────────────────────────────
+   MODULE: ui — today card
+────────────────────────────────────────────── */
+let _countdownTimer = null;
+
+function renderTodayCard() {
+  const today  = new Date();
+  const ramDay = prayers.ramadanDayOf(today);
+  const card   = document.getElementById('todayCard');
+
+  if (!ramDay) {
+    // До или после Рамадана
+    const start    = prayers.RAMADAN_START;
+    const startMid = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const diff     = Math.round((startMid - todayMid) / 86400000);
+    const gregStr  = today.toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' });
+
+    let msg;
+    if (diff > 0) {
+      const plurals = n => n===1?'день':n>=2&&n<=4?'дня':'дней';
+      msg = `До начала Рамадана: <strong>${diff} ${plurals(diff)}</strong><br>1 Рамадан — 19 февраля 2026`;
+    } else {
+      msg = `Рамадан 2026 завершён.<br>До встречи в следующем году! 🌙`;
+    }
+
+    card.innerHTML = `
+      <div class="tc-moon-big">🌙</div>
+      <div class="tc-date"><div class="tc-date-val">${esc(gregStr)}</div><div class="tc-date-lbl">сегодня</div></div>
+      <div class="tc-offseason">${msg}</div>
+    `;
+    return;
+  }
+
+  // Внутри Рамадана
+  const dayData  = prayers.getDay(ramDay);
+  const gregFull = prayers.formatFullDate(dayData.calDate);
+  const progress = Math.round((ramDay / 30) * 100);
+
+  card.innerHTML = `
+    <div class="tc-ramday-num">${ramDay}</div>
+    <div class="tc-ramday-lbl">день Рамадана</div>
+    <div class="tc-sep"></div>
+    <div class="tc-greg-date">${esc(gregFull)}</div>
+    <div class="tc-times-row">
+      <div class="tc-time-block tc-fajr-block">
+        <div class="tc-time-lbl">Фаджр / Сухур</div>
+        <div class="tc-time-val tc-fajr-val">${dayData.fajr}</div>
+        <div class="tc-time-sub" id="fajrSub"></div>
+      </div>
+      <div class="tc-times-divider"></div>
+      <div class="tc-time-block tc-maghrib-block">
+        <div class="tc-time-lbl">Ифтар / Магриб</div>
+        <div class="tc-time-val tc-maghrib-val">${dayData.maghrib}</div>
+        <div class="tc-time-sub" id="maghribSub"></div>
+      </div>
+    </div>
+    <div class="tc-countdown">
+      <div class="tc-countdown-label" id="cdLabel">Осталось до ифтара</div>
+      <div class="tc-countdown-time" id="cdTime">--:--</div>
+    </div>
+    <div class="tc-progress-wrap">
+      <div class="tc-progress-info">
+        <span>Прогресс Рамадана</span>
+        <span>${progress}%</span>
+      </div>
+      <div class="tc-progress-bar"><div class="tc-progress-fill" style="width:${progress}%"></div></div>
+    </div>
+  `;
+
+  // Запустить таймер обратного отсчёта
+  if (_countdownTimer) clearInterval(_countdownTimer);
+
+  function tick() {
+    const maghribSecs = prayers.secondsToMaghrib(ramDay);
+    const fajrSecs    = prayers.secondsToFajr(ramDay);
+    const cdTime  = document.getElementById('cdTime');
+    const cdLabel = document.getElementById('cdLabel');
+    const fajrSub = document.getElementById('fajrSub');
+    const maghribSubEl = document.getElementById('maghribSub');
+    if (!cdTime) { clearInterval(_countdownTimer); return; }
+
+    // Основной таймер — до Магриба или сообщение
+    if (maghribSecs <= 0) {
+      cdTime.textContent  = 'Ифтар наступил! 🌙';
+      cdTime.className    = 'tc-countdown-time passed';
+      cdLabel.textContent = '';
+    } else {
+      cdTime.textContent  = fmtCountdown(maghribSecs);
+      cdTime.className    = 'tc-countdown-time';
+      cdLabel.textContent = 'Осталось до ифтара';
+    }
+
+    // Подпись под Фаджром
+    if (fajrSub) {
+      if (fajrSecs > 0) {
+        fajrSub.textContent = `до окончания сухура ${fmtCountdown(fajrSecs)}`;
+      } else {
+        fajrSub.textContent = 'сухур завершён';
+      }
+    }
+
+    // Подпись под Магрибом
+    if (maghribSubEl) {
+      if (maghribSecs > 0) {
+        maghribSubEl.textContent = `до ифтара ${fmtCountdown(maghribSecs)}`;
+      } else {
+        maghribSubEl.textContent = 'ифтар наступил';
+      }
+    }
+  }
+  tick();
+  _countdownTimer = setInterval(tick, 1000);
+}
+
+/* ──────────────────────────────────────────────
+   MODULE: calendar
+────────────────────────────────────────────── */
+function renderCalendar() {
+  const grid  = document.getElementById('calGrid');
+  const today = new Date();
+  grid.innerHTML = '';
+
+  // ── Карточка 30 Шаабана ──
+  const sha30Entry = state.iftars['sha30'] || null;
+  const sha30Data  = prayers.getShaaban30();
+  const isSha30Today = prayers.isShaaban30(today);
+
+  const sha30Card = document.createElement('div');
+  sha30Card.className = `cal-card st-shaaban${isSha30Today ? ' today' : ''}${sha30Entry?.tarawih ? ' sha-tar' : ''}`;
+  sha30Card.style.animationDelay = '0s';
+  sha30Card.innerHTML = `
+    <span class="cc-num sha-num">30</span>
+    <span class="cc-date sha-sub">шаабан</span>
+    <span class="cc-date">${prayers.formatShortDate(sha30Data.calDate)}</span>
+    ${sha30Entry?.tarawih ? '<span class="cc-dot" style="background:#a78bfa;box-shadow:0 0 4px #a78bfa"></span>' : ''}
+    ${sha30Entry?.tarawih ? '<span class="cc-badges"><span class="cc-badge">✨</span></span>' : ''}
+  `;
+  sha30Card.addEventListener('click', () => openShaaban30Modal());
+  grid.appendChild(sha30Card);
+
+  // ── 30 дней Рамадана ──
+  for (let day = 1; day <= 30; day++) {
+    const entry   = state.iftars[day] || null;
+    const status  = entry ? entry.type : 'empty';
+    const dayData = prayers.getDay(day);
+
+    const isToday = prayers.ramadanDayOf(today) === day;
+    const clsMap  = { empty: '', host: 'st-host', guest: 'st-guest', home: 'st-home', work: 'st-work', mosque: 'st-mosque' };
+
+    const card = document.createElement('div');
+    card.className = `cal-card ${clsMap[status]}${isToday ? ' today' : ''}`;
+    card.style.animationDelay = `${day * 0.016}s`;
+    const badges = [
+      entry?.fajrMosque ? '<span class="cc-badge cc-badge-fajr" title="Фаджр в мечети">🌅</span>' : '',
+      entry?.tarawih    ? '<span class="cc-badge cc-badge-tar"  title="Таравих">✨</span>'          : '',
+    ].join('');
+    card.innerHTML = `
+      <span class="cc-num">${day}</span>
+      <span class="cc-date">${prayers.formatShortDate(dayData.calDate)}</span>
+      <span class="cc-dow">${prayers.formatDayOfWeek(dayData.calDate)}</span>
+      <span class="cc-mag">${dayData.maghrib}</span>
+      ${status !== 'empty' ? `<span class="cc-dot"></span>` : ''}
+      ${badges ? `<span class="cc-badges">${badges}</span>` : ''}
+    `;
+    card.addEventListener('click', () => openDayModal(day));
+    grid.appendChild(card);
+  }
+}
+
+/* ──────────────────────────────────────────────
+   MODULE: stats
+────────────────────────────────────────────── */
+function renderStats() {
+  // Только записи Рамадана (дни 1–30), без 'sha30'
+  const iftarList = Object.entries(state.iftars)
+    .filter(([k]) => k !== 'sha30' && !isNaN(parseInt(k)))
+    .map(([, v]) => v);
+
+  const hosts   = iftarList.filter(e => e.type === 'host').length;
+  const guests  = iftarList.filter(e => e.type === 'guest').length;
+  const homes   = iftarList.filter(e => e.type === 'home').length;
+  const works   = iftarList.filter(e => e.type === 'work').length;
+  const mosques = iftarList.filter(e => e.type === 'mosque').length;
+
+  const fajrMosqs = iftarList.filter(e => e.fajrMosque === true).length;
+  const tarawihs  = iftarList.filter(e => e.tarawih === true).length
+                  + (state.iftars['sha30']?.tarawih === true ? 1 : 0);
+
+  const total = iftarList.length; // только ифтары 1–30
+  const today = new Date();
+  const curRamDay = prayers.ramadanDayOf(today);
+  const daysLeft  = curRamDay != null ? Math.max(0, 30 - curRamDay) : 0;
+  const pct = Math.round((total / 30) * 100);
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card">
+      <div class="s-icon">🌟</div><div class="s-val">${hosts}</div>
+      <div class="s-lbl">Я пригласил</div>
+    </div>
+    <div class="stat-card sc-blue">
+      <div class="s-icon">🤲</div><div class="s-val">${guests}</div>
+      <div class="s-lbl">Меня пригласили</div>
+    </div>
+    <div class="stat-card sc-green">
+      <div class="s-icon">🏠</div><div class="s-val">${homes}</div>
+      <div class="s-lbl">Дома с семьёй</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon">💼</div>
+      <div class="s-val" style="background:linear-gradient(135deg,#d4aaff,#a070e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${works}</div>
+      <div class="s-lbl">На работе</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon">🕌</div>
+      <div class="s-val" style="background:linear-gradient(135deg,#ffbe76,#ff9f43);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${mosques}</div>
+      <div class="s-lbl">Ифтар в мечети</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon">🌅</div>
+      <div class="s-val" style="background:linear-gradient(135deg,#f2d060,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${fajrMosqs}</div>
+      <div class="s-lbl">Фаджр в мечети</div>
+    </div>
+    <div class="stat-card sc-blue">
+      <div class="s-icon">✨</div>
+      <div class="s-val" style="background:linear-gradient(135deg,#80c4ff,#4a9eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${tarawihs}</div>
+      <div class="s-lbl">Таравих в мечети</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon">📅</div><div class="s-val">${total}</div>
+      <div class="s-lbl">Ифтаров записано</div>
+    </div>
+    <div class="stat-card sc-blue">
+      <div class="s-icon">⏳</div><div class="s-val">${daysLeft}</div>
+      <div class="s-lbl">Дней осталось</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon">📊</div><div class="s-val">${pct}%</div>
+      <div class="s-lbl">Заполнено</div>
+    </div>
+  `;
+  renderChart();
+}
+
+function renderChart() {
+  const canvas = document.getElementById('chart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W   = canvas.parentElement.clientWidth - 36;
+  const H   = 155;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  const hD  = Array(30).fill(0);
+  const gD  = Array(30).fill(0);
+  const hmD = Array(30).fill(0);
+  const wD  = Array(30).fill(0);
+  const msD = Array(30).fill(0);
+  Object.entries(state.iftars).forEach(([k, e]) => {
+    const d = parseInt(k);
+    if (d >= 1 && d <= 30) {
+      if (e.type === 'host')   hD[d-1]  = 1;
+      if (e.type === 'guest')  gD[d-1]  = 1;
+      if (e.type === 'home')   hmD[d-1] = 1;
+      if (e.type === 'work')   wD[d-1]  = 1;
+      if (e.type === 'mosque') msD[d-1] = 1;
+    }
+  });
+
+  const pd = 28, cW = W - pd * 2, cH = H - pd - 8;
+  const bW = Math.max(2, Math.floor(cW / 30) - 2);
+  const st = cW / 30;
+  const today = new Date();
+  const curDay = prayers.ramadanDayOf(today);
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  for (let i = 0; i <= 3; i++) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth   = 1;
+    const y = pd + (cH / 3) * i;
+    ctx.beginPath(); ctx.moveTo(pd, y); ctx.lineTo(W - pd, y); ctx.stroke();
+  }
+
+  for (let i = 0; i < 30; i++) {
+    const x = pd + st * i + (st - bW) / 2;
+
+    // Today highlight
+    if (curDay && i + 1 === curDay) {
+      ctx.fillStyle = 'rgba(212,175,55,0.07)';
+      ctx.fillRect(x - 2, pd, bW + 4, cH + 4);
+    }
+
+    const hasEntry = hD[i] || gD[i] || hmD[i] || wD[i] || msD[i];
+
+    if (hD[i]) {
+      const g = ctx.createLinearGradient(0, pd, 0, pd + cH);
+      g.addColorStop(0, '#d4af37'); g.addColorStop(1, 'rgba(212,175,55,.22)');
+      ctx.fillStyle = g;
+    } else if (gD[i]) {
+      const g = ctx.createLinearGradient(0, pd, 0, pd + cH);
+      g.addColorStop(0, '#4a9eff'); g.addColorStop(1, 'rgba(74,158,255,.22)');
+      ctx.fillStyle = g;
+    } else if (hmD[i]) {
+      const g = ctx.createLinearGradient(0, pd, 0, pd + cH);
+      g.addColorStop(0, '#42e087'); g.addColorStop(1, 'rgba(66,224,135,.2)');
+      ctx.fillStyle = g;
+    } else if (wD[i]) {
+      const g = ctx.createLinearGradient(0, pd, 0, pd + cH);
+      g.addColorStop(0, '#c49aff'); g.addColorStop(1, 'rgba(180,130,255,.2)');
+      ctx.fillStyle = g;
+    } else if (msD[i]) {
+      const g = ctx.createLinearGradient(0, pd, 0, pd + cH);
+      g.addColorStop(0, '#ff9f43'); g.addColorStop(1, 'rgba(255,159,67,.2)');
+      ctx.fillStyle = g;
+    } else {
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    }
+
+    const barH = hasEntry ? cH * 0.82 : cH * 0.18;
+    const barY = pd + cH - barH;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x, barY, bW, barH, [2,2,0,0]);
+    else ctx.rect(x, barY, bW, barH);
+    ctx.fill();
+
+    // Labels
+    if ((i + 1) % 5 === 0 || i === 0 || i === 29) {
+      ctx.fillStyle = 'rgba(237,230,216,0.25)';
+      ctx.font = '9px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText(i + 1, x + bW / 2, H - 3);
+    }
+  }
+}
+
+/* ──────────────────────────────────────────────
+   DAY MODAL
+────────────────────────────────────────────── */
+function openDayModal(ramDay) {
+  state.editingDay = ramDay;
+  const entry   = state.iftars[ramDay] || null;
+  const dayData = prayers.getDay(ramDay);
+
+  // Title
+  document.getElementById('dmTitle').textContent = `День ${ramDay} — ${prayers.formatFullDate(dayData.calDate)}`;
+
+  // Prayer table
+  const tbody = document.querySelector('#prayerTable tbody');
+  const rows  = [
+    ['fajr','Фаджр'], ['sunrise','Восход'], ['zuhr','Зухр'],
+    ['asr','Аср'], ['maghrib','Магриб'], ['isha','Иша'],
+  ];
+  tbody.innerHTML = rows.map(([key, name]) => {
+    const val  = dayData[key];
+    const isMg = key === 'maghrib';
+    return `<tr${isMg ? ' class="maghrib-row"' : ''}><td>${name}</td><td>${esc(val)}</td></tr>`;
+  }).join('');
+
+  // Fields
+  document.getElementById('fGuests').value   = entry?.guests   || '';
+  document.getElementById('fLocation').value = entry?.location || '';
+  document.getElementById('fNotes').value    = entry?.notes    || '';
+  document.getElementById('chkFajrMosque').checked = entry?.fajrMosque  || false;
+  document.getElementById('chkTarawih').checked     = entry?.tarawih     || false;
+
+  // Type toggle
+  setModalType(entry?.type || 'host');
+
+  // Delete btn
+  document.getElementById('dmDelete').style.display = entry ? '' : 'none';
+
+  openOverlay('dayOverlay');
+}
+
+function setModalType(t) {
+  state.currentType = t;
+  document.getElementById('ttHost').className   = 'tt-btn' + (t === 'host'   ? ' act-host'   : '');
+  document.getElementById('ttGuest').className  = 'tt-btn' + (t === 'guest'  ? ' act-guest'  : '');
+  document.getElementById('ttHome').className   = 'tt-btn' + (t === 'home'   ? ' act-home'   : '');
+  document.getElementById('ttWork').className   = 'tt-btn' + (t === 'work'   ? ' act-work'   : '');
+  document.getElementById('ttMosque').className = 'tt-btn' + (t === 'mosque' ? ' act-mosque' : '');
+}
+
+function saveDayEntry() {
+  const day = state.editingDay;
+  state.iftars[day] = {
+    type:        state.currentType,
+    guests:      document.getElementById('fGuests').value.trim(),
+    location:    document.getElementById('fLocation').value.trim(),
+    notes:       document.getElementById('fNotes').value.trim(),
+    fajrMosque:  document.getElementById('chkFajrMosque').checked,
+    tarawih:     document.getElementById('chkTarawih').checked,
+    saved:       Date.now(),
+  };
+  storage.save();
+  closeOverlay('dayOverlay');
+  renderCalendar();
+  renderTodayCard();
+  toast(`День ${day} сохранён`, 'ok');
+}
+
+function openShaaban30Modal() {
+  const entry = state.iftars['sha30'] || null;
+  document.getElementById('chkSha30Tarawih').checked = entry?.tarawih || false;
+  document.getElementById('fSha30Notes').value        = entry?.notes   || '';
+  openOverlay('sha30Overlay');
+}
+
+function saveSha30Entry() {
+  const tarawih = document.getElementById('chkSha30Tarawih').checked;
+  const notes   = document.getElementById('fSha30Notes').value.trim();
+  if (tarawih || notes) {
+    state.iftars['sha30'] = { tarawih, notes, saved: Date.now() };
+  } else {
+    delete state.iftars['sha30'];
+  }
+  storage.save();
+  closeOverlay('sha30Overlay');
+  renderCalendar();
+  toast('30 Шаабан сохранён', 'ok');
+}
+
+function deleteDayEntry() {
+  const day = state.editingDay;
+  showConfirm('🗑️', 'Удалить запись?', `Запись за день ${day} Рамадана будет удалена.`, () => {
+    delete state.iftars[day];
+    storage.save();
+    closeOverlay('dayOverlay');
+    renderCalendar();
+    toast('Запись удалена', 'inf');
+  });
+}
+
+/* ──────────────────────────────────────────────
+   DATA: export / import / clear
+────────────────────────────────────────────── */
+function exportData() {
+  const payload = {
+    version: 1, app: 'ramadan2026-makhachkala',
+    exportedAt: new Date().toISOString(),
+    iftars: state.iftars,
+  };
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
+  a.download = 'iftar-2026.json';
+  a.click();
+  toast('Данные экспортированы', 'ok');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = (e) => {
+    try {
+      const p = JSON.parse(e.target.result);
+      if (!p.iftars) throw 0;
+      state.iftars = p.iftars;
+      storage.save();
+      renderCalendar();
+      renderTodayCard();
+      toast('Данные импортированы', 'ok');
+    } catch { toast('Ошибка: неверный формат файла', 'err'); }
+    event.target.value = '';
+  };
+  r.readAsText(file);
+}
+
+/* ──────────────────────────────────────────────
+   OVERLAYS: open / close
+────────────────────────────────────────────── */
+function openOverlay(id) {
+  document.getElementById(id).classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeOverlay(id) {
+  document.getElementById(id).classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function showConfirm(icon, title, text, onConfirm) {
+  document.getElementById('confIcon').textContent  = icon;
+  document.getElementById('confTitle').textContent = title;
+  document.getElementById('confText').innerHTML    = text;
+  document.getElementById('confOk').onclick = () => { closeOverlay('confirmOverlay'); onConfirm(); };
+  openOverlay('confirmOverlay');
+}
+
+/* ──────────────────────────────────────────────
+   TOAST
+────────────────────────────────────────────── */
+function toast(msg, type = 'inf') {
+  const icons = { ok: '✅', err: '❌', inf: 'ℹ️' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type]}</span><span>${esc(msg)}</span>`;
+  document.getElementById('toasts').appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 3200);
+}
+
+/* ──────────────────────────────────────────────
+   NAV
+────────────────────────────────────────────── */
+function switchSection(secId, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(secId).classList.add('active');
+  btn.classList.add('active');
+  if (secId === 'secHome')  { renderTodayCard(); renderCalendar(); }
+  if (secId === 'secStats') renderStats();
+}
+
+/* ──────────────────────────────────────────────
+   NOTIF BUTTON STATE
+────────────────────────────────────────────── */
+function updateNotifBtn() {
+  const btn   = document.getElementById('notifBtn');
+  const label = document.getElementById('notifLabel');
+  const icon  = btn.querySelector('.nb-icon');
+  if (state.notifEnabled) {
+    btn.classList.add('enabled');
+    if (label) label.textContent = 'Вкл';
+    if (icon)  icon.textContent  = '🔔';
+  } else {
+    btn.classList.remove('enabled');
+    if (label) label.textContent = 'Уведомления';
+    if (icon)  icon.textContent  = '🔕';
+  }
+}
+
+/* ──────────────────────────────────────────────
+   PWA SETUP
+────────────────────────────────────────────── */
+function initPWA() {
+  const ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#080d1a"/><circle cx="266" cy="256" r="144" fill="#d4af37"/><circle cx="308" cy="220" r="112" fill="#080d1a"/><circle cx="266" cy="256" r="144" fill="none" stroke="#f2d060" stroke-width="8" opacity=".25"/><text x="256" y="420" font-family="system-ui" font-size="100" text-anchor="middle" fill="#d4af37" opacity=".18">2026</text></svg>`;
+  const ICON_URL = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(ICON_SVG)));
+
+  const manifest = {
+    name: 'Рамадан 2026 — Махачкала',
+    short_name: 'Рамадан 2026',
+    description: 'Расписание ифтаров и намазов. Рамадан 2026, Махачкала.',
+    start_url: './',
+    display: 'standalone',
+    orientation: 'portrait-primary',
+    background_color: '#080d1a',
+    theme_color: '#080d1a',
+    lang: 'ru',
+    icons: [
+      { src: ICON_URL, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
+      { src: ICON_URL, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' },
+    ],
+  };
+  const ml = document.createElement('link');
+  ml.rel = 'manifest';
+  ml.href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' }));
+  document.head.appendChild(ml);
+
+  // Service Worker
+  const swSrc = `
+    const CACHE = 'ramadan2026-v1';
+    const ASSETS = [location.href];
+    self.addEventListener('install', e => {
+      self.skipWaiting();
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>{})));
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(ks =>
+        Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))
+      ));
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        caches.match(e.request).then(r => r || fetch(e.request).catch(() =>
+          new Response('Offline. Данные сохранены локально.', {headers:{'Content-Type':'text/plain;charset=utf-8'}})
+        ))
+      );
+    });
+  `;
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(
+      URL.createObjectURL(new Blob([swSrc], { type: 'application/javascript' }))
+    ).catch(() => {});
+  }
+
+  // Install prompt
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    state.deferredPWA = e;
+    document.getElementById('installBanner').classList.add('show');
+  });
+  document.getElementById('installBanner').addEventListener('click', async (ev) => {
+    if (ev.target.id === 'ibClose') {
+      document.getElementById('installBanner').classList.remove('show');
+      return;
+    }
+    if (!state.deferredPWA) return;
+    document.getElementById('installBanner').classList.remove('show');
+    state.deferredPWA.prompt();
+    await state.deferredPWA.userChoice;
+    state.deferredPWA = null;
+  });
+  document.getElementById('ibClose').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('installBanner').classList.remove('show');
+  });
+}
+
+/* ──────────────────────────────────────────────
+   EVENT LISTENERS
+────────────────────────────────────────────── */
+function bindEvents() {
+  // Navigation
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchSection(btn.dataset.sec, btn));
+  });
+
+  // Close overlays on backdrop click
+  document.querySelectorAll('.overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeOverlay(overlay.id);
+    });
+  });
+
+  // Close buttons with data-close attr
+  document.querySelectorAll('[data-close]').forEach(btn => {
+    btn.addEventListener('click', () => closeOverlay(btn.dataset.close));
+  });
+
+  // ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.overlay.show').forEach(o => closeOverlay(o.id));
+    }
+  });
+
+  // Day modal buttons
+  document.getElementById('dmSave').addEventListener('click', saveDayEntry);
+  document.getElementById('dmDelete').addEventListener('click', deleteDayEntry);
+  document.getElementById('sha30Save').addEventListener('click', saveSha30Entry);
+
+  // Type toggle
+  document.getElementById('ttHost').addEventListener('click',   () => setModalType('host'));
+  document.getElementById('ttGuest').addEventListener('click',  () => setModalType('guest'));
+  document.getElementById('ttHome').addEventListener('click',   () => setModalType('home'));
+  document.getElementById('ttWork').addEventListener('click',   () => setModalType('work'));
+  document.getElementById('ttMosque').addEventListener('click', () => setModalType('mosque'));
+
+  // Notifications
+  document.getElementById('notifBtn').addEventListener('click', () => notifications.toggle());
+
+  // Export
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+
+  // Import
+  document.getElementById('importFile').addEventListener('change', importData);
+
+  // Clear
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    showConfirm('⚠️', 'Очистить все данные?', 'Все записи ифтаров будут удалены безвозвратно.', () => {
+      storage.clear();
+      renderCalendar();
+      renderTodayCard();
+      toast('Все данные удалены', 'inf');
+    });
+  });
+
+  // Resize → re-render chart
+  let rto;
+  window.addEventListener('resize', () => {
+    clearTimeout(rto);
+    rto = setTimeout(() => {
+      if (document.getElementById('secStats').classList.contains('active')) renderStats();
+    }, 220);
+  });
+}
+
+/* ──────────────────────────────────────────────
+   INIT
+────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  storage.load();
+  initPWA();
+  bindEvents();
+  renderTodayCard();
+  renderCalendar();
+
+  // Расписание уведомлений если уже разрешено
+  if ('Notification' in window && Notification.permission === 'granted') {
+    state.notifEnabled = true;
+    updateNotifBtn();
+    notifications.scheduleToday();
+  }
+});
+</script>
+</body>
+</html>
