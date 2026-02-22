@@ -349,6 +349,66 @@ body::before{
 .cal-card.st-mosque:hover{box-shadow:0 0 28px rgba(255,159,67,.16),var(--sh-card)}
 .cal-card.today{outline:2px solid rgba(212,175,55,.5);outline-offset:-2px}
 
+/* Лейлятуль кадр — ночи таравиха 21,23,25,27,29 */
+.cal-card.lq-night{
+  background:linear-gradient(135deg,rgba(212,175,55,.14) 0%,rgba(255,215,0,.08) 100%);
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 0 18px rgba(212,175,55,.18);
+}
+.cal-card.lq-night:hover{
+  box-shadow:0 0 32px rgba(212,175,55,.32),var(--sh-card);
+}
+.lq-star{
+  position:absolute;top:4px;right:5px;
+  font-size:9px;opacity:.85;
+  filter:drop-shadow(0 0 4px rgba(212,175,55,.8));
+}
+.lq-label{
+  font-size:7px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--gold);opacity:.75;
+}
+
+/* Eid card */
+.cal-card.st-eid{
+  background:linear-gradient(135deg,rgba(212,175,55,.18) 0%,rgba(255,215,0,.1) 100%);
+  border-color:rgba(212,175,55,.65);
+  border-width:2px;
+  box-shadow:0 0 28px rgba(212,175,55,.28);
+}
+.cal-card.st-eid:hover{
+  box-shadow:0 0 42px rgba(212,175,55,.4),var(--sh-card);
+}
+.cal-card.st-eid .cc-num{
+  color:var(--gold-l);
+  filter:drop-shadow(0 0 8px rgba(212,175,55,.6));
+}
+.eid-icon{font-size:18px;line-height:1;margin-bottom:2px}
+.eid-sub{font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);opacity:.8}
+
+/* Settings modal */
+.settings-section{margin-bottom:20px}
+.settings-section-title{
+  font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:10px;padding-bottom:6px;
+  border-bottom:1px solid var(--c-border);
+}
+.settings-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.settings-row:last-child{border-bottom:none}
+.settings-lbl{font-size:13px;font-weight:600;color:var(--text-2)}
+.settings-sub{font-size:10px;color:var(--text-3);margin-top:2px}
+.settings-row input[type=date]{
+  background:rgba(255,255,255,.04);border:1px solid var(--c-border);
+  border-radius:8px;padding:7px 10px;color:var(--text);font-size:13px;
+  -webkit-appearance:none;color-scheme:dark;
+}
+.settings-row input[type=date]:focus{
+  outline:none;border-color:rgba(212,175,55,.4);
+}
+.settings-btn-row{margin-top:16px;display:flex;gap:8px}
+
 /* 30 Шаабан */
 .cal-card.st-shaaban{
   background:rgba(167,139,250,.07);
@@ -729,6 +789,9 @@ textarea.fc{resize:vertical;min-height:72px}
       <span class="nb-dot"></span>
       <span class="nb-txt" id="notifLabel">Уведомления</span>
     </button>
+    <button class="notif-btn" id="settingsBtn" title="Настройки" style="padding:8px 10px">
+      <span class="nb-icon">⚙️</span>
+    </button>
   </div>
 </header>
 
@@ -758,6 +821,7 @@ textarea.fc{resize:vertical;min-height:72px}
       <div class="legend-item"><span class="ldot ldot-home"></span>Дома с семьёй</div>
       <div class="legend-item"><span class="ldot ldot-work"></span>На работе</div>
       <div class="legend-item"><span class="ldot ldot-mosque"></span>В мечети</div>
+      <div class="legend-item"><span class="ldot" style="background:var(--gold);box-shadow:0 0 5px rgba(212,175,55,.6)"></span>⭐ Возможная Лейлятуль Кадр</div>
     </div>
     <div class="cal-grid" id="calGrid"></div>
   </section>
@@ -766,10 +830,6 @@ textarea.fc{resize:vertical;min-height:72px}
   <section id="secStats" class="section">
     <div class="sec-header"><div class="sec-title">📊 Статистика</div></div>
     <div class="stats-grid" id="statsGrid"></div>
-    <div class="chart-wrap">
-      <div class="chart-title">Распределение ифтаров по дням</div>
-      <canvas id="chart" height="155"></canvas>
-    </div>
   </section>
 
   <!-- ── DATA ── -->
@@ -924,6 +984,50 @@ textarea.fc{resize:vertical;min-height:72px}
   </div>
 </div>
 
+<!-- SETTINGS MODAL -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">⚙️ Настройки</div>
+        <div class="modal-sub">Корректировка дат Рамадана 2026</div>
+      </div>
+      <button class="mclose" data-close="settingsOverlay">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-section">
+        <div class="settings-section-title">Даты</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">1 Рамадан</div>
+            <div class="settings-sub">Начало месяца (по умолчанию 19 февраля 2026)</div>
+          </div>
+          <input type="date" id="stgRamadanStart" value="2026-02-19">
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">День Праздника (Ид аль-Фитр)</div>
+            <div class="settings-sub">После окончания Рамадана (по умолчанию 21 марта 2026)</div>
+          </div>
+          <input type="date" id="stgEidDate" value="2026-03-21">
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Информация</div>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.6">
+          Таравих — ночная молитва, совершаемая после намаза Иша. <br>
+          <strong style="color:var(--gold)">Лейлятуль Кадр</strong> — ночь Предопределения, которая по Сунне ищется в нечётных ночах последней декады Рамадана (21-я, 23-я, 25-я, 27-я и 29-я ночи). <br><br>
+          Ночи считаются от захода солнца: так, 1-я ночь Рамадана — это вечер 30 Шаабана, а таравих 21-й ночи совершается в вечер 20-го дня Рамадана.
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="settingsOverlay">Отмена</button>
+      <button class="btn btn-primary" id="stgSave">Применить</button>
+    </div>
+  </div>
+</div>
+
 <!-- CONFIRM MODAL -->
 <div class="overlay" id="confirmOverlay">
   <div class="modal">
@@ -988,23 +1092,56 @@ const prayers = (() => {
     ['04:21','05:52','12:02','15:22','18:06','19:20'], // 30 — 20 мар
   ];
 
-  // Начало Рамадана: 19 февраля 2026
-  const RAMADAN_START = new Date(2026, 1, 19); // month 1 = февраль
-  // 30 Шаабан: 18 февраля 2026 — вечер первого Таравиха
-  const SHAABAN30_DATE = new Date(2026, 1, 18);
-  // Данные намаза для 30 Шаабана (18 фев 2026) — экстраполируем от дня 1
+  // Настраиваемые даты (загружаются из localStorage)
+  function loadSettings() {
+    try {
+      const s = localStorage.getItem('ramadan2026_settings');
+      if (s) return JSON.parse(s);
+    } catch(e) {}
+    return null;
+  }
+
+  function getRamadanStart() {
+    const s = loadSettings();
+    if (s && s.ramadanStart) {
+      const [y,m,d] = s.ramadanStart.split('-').map(Number);
+      return new Date(y, m-1, d);
+    }
+    return new Date(2026, 1, 19); // 19 февраля 2026
+  }
+
+  function getEidDate() {
+    const s = loadSettings();
+    if (s && s.eidDate) {
+      const [y,m,d] = s.eidDate.split('-').map(Number);
+      return new Date(y, m-1, d);
+    }
+    return new Date(2026, 2, 21); // 21 марта 2026
+  }
+
+  // 30 Шаабан: день перед 1 Рамадана
+  function getShaaban30Date() {
+    const rs = getRamadanStart();
+    const d = new Date(rs);
+    d.setDate(d.getDate() - 1);
+    return d;
+  }
+
+  // Данные намаза для 30 Шаабана — экстраполируем от дня 1
   const SHA30_DATA = ['05:10','06:41','12:08','14:58','17:28','18:43'];
 
   function isShaaban30(date) {
     const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    const s = new Date(2026, 1, 18);
+    const s30 = getShaaban30Date();
+    const s = new Date(s30.getFullYear(), s30.getMonth(), s30.getDate());
     return d.getTime() === s.getTime();
   }
 
   function getShaaban30() {
+    const calDate = getShaaban30Date();
     return {
       ramDay:  0,
-      calDate: SHAABAN30_DATE,
+      calDate,
       fajr:    SHA30_DATA[0],
       sunrise: SHA30_DATA[1],
       zuhr:    SHA30_DATA[2],
@@ -1019,6 +1156,7 @@ const prayers = (() => {
 
   // Дата → день Рамадана (1..30) или null
   function ramadanDayOf(date) {
+    const RAMADAN_START = getRamadanStart();
     const d0 = new Date(RAMADAN_START.getFullYear(), RAMADAN_START.getMonth(), RAMADAN_START.getDate());
     const d1 = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const diff = Math.round((d1 - d0) / 86400000);
@@ -1026,8 +1164,16 @@ const prayers = (() => {
     return diff + 1;
   }
 
+  function isEidDay(date) {
+    const eid = getEidDate();
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const e = new Date(eid.getFullYear(), eid.getMonth(), eid.getDate());
+    return d.getTime() === e.getTime();
+  }
+
   // Получить данные для дня Рамадана (1..30)
   function getDay(ramDay) {
+    const RAMADAN_START = getRamadanStart();
     const idx = ramDay - 1;
     const row = DATA[idx];
     const calDate = new Date(RAMADAN_START);
@@ -1085,7 +1231,16 @@ const prayers = (() => {
     return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  return { DATA, NAMES, KEYS, RAMADAN_START, SHAABAN30_DATE, ramadanDayOf, isShaaban30, getShaaban30, getDay, parseTime, secondsToMaghrib, secondsToFajr, formatShortDate, formatDayOfWeek, formatFullDate };
+  // Нечётные ночи Рамадана (21,23,25,27,29): таравих совершается вечером дня ПЕРЕД ночью
+  // Ночь N считается от захода солнца дня (N-1). Т.е. 21-я ночь = вечер 20-го дня.
+  // Таравих-ночи Лейлятуль Кадр приходятся на дни: 20, 22, 24, 26, 28
+  const LQ_TARAWIH_DAYS = new Set([20, 22, 24, 26, 28]);
+
+  function isLaylaBefore(ramDay) {
+    return LQ_TARAWIH_DAYS.has(ramDay);
+  }
+
+  return { DATA, NAMES, KEYS, getRamadanStart, getShaaban30Date, getEidDate, ramadanDayOf, isShaaban30, isEidDay, getShaaban30, getDay, parseTime, secondsToMaghrib, secondsToFajr, formatShortDate, formatDayOfWeek, formatFullDate, isLaylaBefore, loadSettings };
 })();
 
 /* ──────────────────────────────────────────────
@@ -1208,7 +1363,7 @@ function renderTodayCard() {
 
   if (!ramDay) {
     // До или после Рамадана
-    const start    = prayers.RAMADAN_START;
+    const start    = prayers.getRamadanStart();
     const startMid = new Date(start.getFullYear(), start.getMonth(), start.getDate());
     const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const diff     = Math.round((startMid - todayMid) / 86400000);
@@ -1217,7 +1372,8 @@ function renderTodayCard() {
     let msg;
     if (diff > 0) {
       const plurals = n => n===1?'день':n>=2&&n<=4?'дня':'дней';
-      msg = `До начала Рамадана: <strong>${diff} ${plurals(diff)}</strong><br>1 Рамадан — 19 февраля 2026`;
+      const startStr = start.toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'});
+      msg = `До начала Рамадана: <strong>${diff} ${plurals(diff)}</strong><br>1 Рамадан — ${startStr}`;
     } else {
       msg = `Рамадан 2026 завершён.<br>До встречи в следующем году! 🌙`;
     }
@@ -1346,17 +1502,25 @@ function renderCalendar() {
     const isToday = prayers.ramadanDayOf(today) === day;
     const clsMap  = { empty: '', host: 'st-host', guest: 'st-guest', home: 'st-home', work: 'st-work', mosque: 'st-mosque' };
 
+    // Является ли этот день вечером возможной Лейлятуль Кадр
+    const isLQ = prayers.isLaylaBefore(day);
+
     const card = document.createElement('div');
-    card.className = `cal-card ${clsMap[status]}${isToday ? ' today' : ''}`;
+    card.className = `cal-card ${clsMap[status]}${isToday ? ' today' : ''}${isLQ ? ' lq-night' : ''}`;
     card.style.animationDelay = `${day * 0.016}s`;
     const badges = [
       entry?.fajrMosque ? '<span class="cc-badge cc-badge-fajr" title="Фаджр в мечети">🌅</span>' : '',
       entry?.tarawih    ? '<span class="cc-badge cc-badge-tar"  title="Таравих">✨</span>'          : '',
     ].join('');
+
+    // Номер ночи для LQ-дней: день 20 = 21-я ночь, день 22 = 23-я и т.д.
+    const lqNightNum = isLQ ? (day + 1) : null;
+
     card.innerHTML = `
+      ${isLQ ? `<span class="lq-star">⭐</span>` : ''}
       <span class="cc-num">${day}</span>
       <span class="cc-date">${prayers.formatShortDate(dayData.calDate)}</span>
-      <span class="cc-dow">${prayers.formatDayOfWeek(dayData.calDate)}</span>
+      ${isLQ ? `<span class="lq-label">${lqNightNum}-я ночь</span>` : `<span class="cc-dow">${prayers.formatDayOfWeek(dayData.calDate)}</span>`}
       <span class="cc-mag">${dayData.maghrib}</span>
       ${status !== 'empty' ? `<span class="cc-dot"></span>` : ''}
       ${badges ? `<span class="cc-badges">${badges}</span>` : ''}
@@ -1364,6 +1528,21 @@ function renderCalendar() {
     card.addEventListener('click', () => openDayModal(day));
     grid.appendChild(card);
   }
+
+  // ── Карточка Праздника (Ид аль-Фитр) ──
+  const eidDate = prayers.getEidDate();
+  const isEidToday = prayers.isEidDay(today);
+  const eidCard = document.createElement('div');
+  eidCard.className = `cal-card st-eid${isEidToday ? ' today' : ''}`;
+  eidCard.style.animationDelay = `${31 * 0.016}s`;
+  eidCard.innerHTML = `
+    <span class="eid-icon">🎉</span>
+    <span class="cc-num" style="font-size:16px">Ид</span>
+    <span class="eid-sub">аль-фитр</span>
+    <span class="cc-date">${prayers.formatShortDate(eidDate)}</span>
+  `;
+  eidCard.style.cursor = 'default';
+  grid.appendChild(eidCard);
 }
 
 /* ──────────────────────────────────────────────
@@ -1393,6 +1572,28 @@ function renderStats() {
 
   document.getElementById('statsGrid').innerHTML = `
     <div class="stat-card">
+      <div class="s-icon">🌅</div>
+      <div class="s-val" style="background:linear-gradient(135deg,#f2d060,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${fajrMosqs}</div>
+      <div class="s-lbl">Фаджр в мечети</div>
+    </div>
+    <div class="stat-card sc-blue">
+      <div class="s-icon">✨</div>
+      <div class="s-val" style="background:linear-gradient(135deg,#80c4ff,#4a9eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${tarawihs}</div>
+      <div class="s-lbl">Таравих в мечети</div>
+    </div>
+    <div class="stat-card sc-blue">
+      <div class="s-icon">⏳</div><div class="s-val">${daysLeft}</div>
+      <div class="s-lbl">Дней осталось</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon">📊</div><div class="s-val">${pct}%</div>
+      <div class="s-lbl">Заполнено</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon">📅</div><div class="s-val">${total}</div>
+      <div class="s-lbl">Ифтаров записано</div>
+    </div>
+    <div class="stat-card">
       <div class="s-icon">🌟</div><div class="s-val">${hosts}</div>
       <div class="s-lbl">Я пригласил</div>
     </div>
@@ -1414,30 +1615,7 @@ function renderStats() {
       <div class="s-val" style="background:linear-gradient(135deg,#ffbe76,#ff9f43);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${mosques}</div>
       <div class="s-lbl">Ифтар в мечети</div>
     </div>
-    <div class="stat-card">
-      <div class="s-icon">🌅</div>
-      <div class="s-val" style="background:linear-gradient(135deg,#f2d060,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${fajrMosqs}</div>
-      <div class="s-lbl">Фаджр в мечети</div>
-    </div>
-    <div class="stat-card sc-blue">
-      <div class="s-icon">✨</div>
-      <div class="s-val" style="background:linear-gradient(135deg,#80c4ff,#4a9eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${tarawihs}</div>
-      <div class="s-lbl">Таравих в мечети</div>
-    </div>
-    <div class="stat-card">
-      <div class="s-icon">📅</div><div class="s-val">${total}</div>
-      <div class="s-lbl">Ифтаров записано</div>
-    </div>
-    <div class="stat-card sc-blue">
-      <div class="s-icon">⏳</div><div class="s-val">${daysLeft}</div>
-      <div class="s-lbl">Дней осталось</div>
-    </div>
-    <div class="stat-card">
-      <div class="s-icon">📊</div><div class="s-val">${pct}%</div>
-      <div class="s-lbl">Заполнено</div>
-    </div>
   `;
-  renderChart();
 }
 
 function renderChart() {
@@ -1605,6 +1783,9 @@ function saveDayEntry() {
 
 function openShaaban30Modal() {
   const entry = state.iftars['sha30'] || null;
+  const sha30Data = prayers.getShaaban30();
+  const sha30Title = document.querySelector('#sha30Overlay .modal-title');
+  if (sha30Title) sha30Title.textContent = `30 Шаабан — ${prayers.formatShortDate(sha30Data.calDate)}`;
   document.getElementById('chkSha30Tarawih').checked = entry?.tarawih || false;
   document.getElementById('fSha30Notes').value        = entry?.notes   || '';
   openOverlay('sha30Overlay');
@@ -1688,6 +1869,32 @@ function showConfirm(icon, title, text, onConfirm) {
   document.getElementById('confText').innerHTML    = text;
   document.getElementById('confOk').onclick = () => { closeOverlay('confirmOverlay'); onConfirm(); };
   openOverlay('confirmOverlay');
+}
+
+/* ──────────────────────────────────────────────
+   SETTINGS
+────────────────────────────────────────────── */
+function openSettingsModal() {
+  const s = prayers.loadSettings() || {};
+  const rsDate = prayers.getRamadanStart();
+  const eidDate = prayers.getEidDate();
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  document.getElementById('stgRamadanStart').value = s.ramadanStart || fmt(rsDate);
+  document.getElementById('stgEidDate').value = s.eidDate || fmt(eidDate);
+  openOverlay('settingsOverlay');
+}
+
+function saveSettings() {
+  const rsVal  = document.getElementById('stgRamadanStart').value;
+  const eidVal = document.getElementById('stgEidDate').value;
+  if (!rsVal || !eidVal) { toast('Заполните все даты', 'err'); return; }
+  try {
+    localStorage.setItem('ramadan2026_settings', JSON.stringify({ ramadanStart: rsVal, eidDate: eidVal }));
+  } catch(e) {}
+  closeOverlay('settingsOverlay');
+  renderCalendar();
+  renderTodayCard();
+  toast('Настройки сохранены ✓', 'ok');
 }
 
 /* ──────────────────────────────────────────────
@@ -1853,6 +2060,10 @@ function bindEvents() {
 
   // Notifications
   document.getElementById('notifBtn').addEventListener('click', () => notifications.toggle());
+
+  // Settings
+  document.getElementById('settingsBtn').addEventListener('click', () => openSettingsModal());
+  document.getElementById('stgSave').addEventListener('click', saveSettings);
 
   // Export
   document.getElementById('exportBtn').addEventListener('click', exportData);
