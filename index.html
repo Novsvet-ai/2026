@@ -763,16 +763,11 @@ textarea.fc{resize:vertical;min-height:72px}
    VISITOR COUNTER
 ═══════════════════════════════════════════════ */
 .visitors-badge{
-  display:flex;align-items:center;gap:9px;
-  padding:5px 11px 5px 8px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;
-  font-size:11px;color:var(--text-3);
-  white-space:nowrap;
-  transition:var(--tr);
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  margin-top:8px;padding:8px 16px;
+  color:var(--text-3);
+  font-size:11px;
 }
-.visitors-badge:hover{border-color:rgba(212,175,55,.2);color:var(--text-2)}
 .vb-group{display:flex;align-items:center;gap:5px;line-height:1}
 .vb-dot{
   width:6px;height:6px;border-radius:50%;flex-shrink:0;
@@ -787,12 +782,8 @@ textarea.fc{resize:vertical;min-height:72px}
   0%,100%{opacity:1;box-shadow:0 0 5px rgba(66,224,135,.5)}
   50%{opacity:.6;box-shadow:0 0 9px rgba(66,224,135,.8)}
 }
-.vb-num{font-weight:700;font-size:12px;color:var(--text)}
-.vb-sep{width:1px;height:14px;background:rgba(255,255,255,.08)}
-@media(max-width:380px){
-  .vb-group:first-child{display:none}
-  .vb-sep{display:none}
-}
+.vb-num{font-weight:700;font-size:12px;color:var(--text-2)}
+.vb-sep{width:1px;height:14px;background:rgba(255,255,255,.1)}
 
 /* ═══════════════════════════════════════════════
    RESPONSIVE
@@ -816,17 +807,6 @@ textarea.fc{resize:vertical;min-height:72px}
     <div>
       <div class="brand-title">Рамадан 2026</div>
       <div class="brand-sub">Махачкала</div>
-    </div>
-  </div>
-  <div id="visitorsBadge" class="visitors-badge" title="Пользователи приложения">
-    <div class="vb-group">
-      <span class="vb-dot vb-dot-total"></span>
-      <span class="vb-num" id="vbTotal">—</span>
-    </div>
-    <div class="vb-sep"></div>
-    <div class="vb-group">
-      <span class="vb-dot vb-dot-today"></span>
-      <span class="vb-num" id="vbToday">—</span>
     </div>
   </div>
   <div class="header-right">
@@ -879,6 +859,19 @@ textarea.fc{resize:vertical;min-height:72px}
     " onmouseover="this.style.color='rgba(237,230,216,0.6)'" onmouseout="this.style.color='rgba(237,230,216,0.28)'">
       ✦ Created by <span style="color:#4a9eff;margin-left:3px">@salimgadzhiev</span>
     </a>
+    <div id="visitorsBadge" class="visitors-badge">
+      <div class="vb-group" title="Всего посетителей">
+        <span class="vb-dot vb-dot-total"></span>
+        <span style="font-size:10px;color:var(--text-3)">всего</span>
+        <span class="vb-num" id="vbTotal">—</span>
+      </div>
+      <div class="vb-sep"></div>
+      <div class="vb-group" title="Сегодня">
+        <span class="vb-dot vb-dot-today"></span>
+        <span style="font-size:10px;color:var(--text-3)">сегодня</span>
+        <span class="vb-num" id="vbToday">—</span>
+      </div>
+    </div>
   </section>
 
   <!-- ── STATS ── -->
@@ -2148,11 +2141,12 @@ function bindEvents() {
 
 /* ──────────────────────────────────────────────
    VISITOR COUNTER
-   Использует countapi.xyz для хранения счётчиков.
+   API: counterapi.dev — бесплатный, без регистрации,
+   работает с GitHub Pages.
    Уникальность сессии и "сегодня" — через localStorage.
 ────────────────────────────────────────────── */
 const visitors = {
-  NS:        'ramadan2026-makhachkala',
+  BASE:      'https://api.counterapi.dev/v1/novsvet-ai-2026',
   KEY_TOTAL: 'visits-total',
   KEY_TODAY: 'visits-today',
   LS_SESSION:'ram26_session',
@@ -2167,31 +2161,29 @@ const visitors = {
     const isNewSession = !sessionStorage.getItem(this.LS_SESSION);
     const isNewToday   = localStorage.getItem(this.LS_TODAY) !== this.todayStr();
 
-    // Засчитываем только новые сессии для total
     if (isNewSession) {
       sessionStorage.setItem(this.LS_SESSION, '1');
       await this._increment(this.KEY_TOTAL);
     }
-    // Засчитываем только одно посещение в день для today
     if (isNewToday) {
       localStorage.setItem(this.LS_TODAY, this.todayStr());
       await this._increment(this.KEY_TODAY);
     }
 
-    this.render();
+    await this.render();
   },
 
   async _increment(key) {
     try {
-      await fetch(`https://api.countapi.xyz/hit/${this.NS}/${key}`);
+      await fetch(`${this.BASE}/${key}/up`);
     } catch(e) {}
   },
 
   async _get(key) {
     try {
-      const r = await fetch(`https://api.countapi.xyz/get/${this.NS}/${key}`);
+      const r = await fetch(`${this.BASE}/${key}/get`);
       const d = await r.json();
-      return d.value || 0;
+      return d.count ?? d.value ?? 0;
     } catch(e) { return null; }
   },
 
@@ -2204,12 +2196,6 @@ const visitors = {
     const elToday = document.getElementById('vbToday');
     if (elTotal) elTotal.textContent = total !== null ? total : '—';
     if (elToday) elToday.textContent = today !== null ? today : '—';
-
-    // tooltip
-    const badge = document.getElementById('visitorsBadge');
-    if (badge && total !== null) {
-      badge.title = `Всего посетителей: ${total} · Сегодня: ${today ?? '—'}`;
-    }
   },
 };
 
