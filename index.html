@@ -2140,62 +2140,82 @@ function bindEvents() {
 }
 
 /* ──────────────────────────────────────────────
-   VISITOR COUNTER
-   API: counterapi.dev — бесплатный, без регистрации,
-   работает с GitHub Pages.
-   Уникальность сессии и "сегодня" — через localStorage.
+   VISITOR COUNTER — Supabase
 ────────────────────────────────────────────── */
 const visitors = {
-  BASE:      'https://api.counterapi.dev/v1/novsvet-ai-2026',
-  KEY_TOTAL: 'visits-total',
-  KEY_TODAY: 'visits-today',
+  URL:       'https://ntrieprkqchfrjlwhxfa.supabase.co/rest/v1/counters',
+  KEY:       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cmllcHJrcWNoZnJqbHdoeGZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NDk3OTcsImV4cCI6MjA4NzMyNTc5N30.u27e8gLRULVhutwWVozqYG7FfwVYUpoYiTC7zYIguJk',
   LS_SESSION:'ram26_session',
   LS_TODAY:  'ram26_today',
 
   todayStr() {
     const d = new Date();
-    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  },
+
+  headers() {
+    return {
+      'apikey':        this.KEY,
+      'Authorization': 'Bearer ' + this.KEY,
+      'Content-Type':  'application/json',
+      'Prefer':        'return=representation',
+    };
+  },
+
+  async increment(key) {
+    // Читаем текущее значение
+    const r = await fetch(`${this.URL}?key=eq.${key}&select=value`, { headers: this.headers() });
+    const data = await r.json();
+    const cur = data[0]?.value ?? 0;
+    // Обновляем
+    await fetch(`${this.URL}?key=eq.${key}`, {
+      method:  'PATCH',
+      headers: this.headers(),
+      body:    JSON.stringify({ value: cur + 1 }),
+    });
+  },
+
+  async getVal(key) {
+    const r = await fetch(`${this.URL}?key=eq.${key}&select=value`, { headers: this.headers() });
+    const d = await r.json();
+    return d[0]?.value ?? 0;
   },
 
   async hit() {
-    const isNewSession = !sessionStorage.getItem(this.LS_SESSION);
-    const isNewToday   = localStorage.getItem(this.LS_TODAY) !== this.todayStr();
-
-    if (isNewSession) {
-      sessionStorage.setItem(this.LS_SESSION, '1');
-      await this._increment(this.KEY_TOTAL);
-    }
-    if (isNewToday) {
-      localStorage.setItem(this.LS_TODAY, this.todayStr());
-      await this._increment(this.KEY_TODAY);
-    }
-
-    await this.render();
-  },
-
-  async _increment(key) {
     try {
-      await fetch(`${this.BASE}/${key}/up`);
-    } catch(e) {}
-  },
+      const isNewSession = !sessionStorage.getItem(this.LS_SESSION);
+      const isNewToday   = localStorage.getItem(this.LS_TODAY) !== this.todayStr();
 
-  async _get(key) {
-    try {
-      const r = await fetch(`${this.BASE}/${key}/get`);
-      const d = await r.json();
-      return d.count ?? d.value ?? 0;
-    } catch(e) { return null; }
+      // Если новый день — сбрасываем счётчик today в БД
+      if (isNewToday) {
+        localStorage.setItem(this.LS_TODAY, this.todayStr());
+        await fetch(`${this.URL}?key=eq.today`, {
+          method:  'PATCH',
+          headers: this.headers(),
+          body:    JSON.stringify({ value: 1 }),
+        });
+      }
+
+      if (isNewSession) {
+        sessionStorage.setItem(this.LS_SESSION, '1');
+        await this.increment('total');
+        // Если не новый день — инкрементируем today
+        if (!isNewToday) await this.increment('today');
+      }
+
+      await this.render();
+    } catch(e) { console.warn('Counter error:', e); }
   },
 
   async render() {
     const [total, today] = await Promise.all([
-      this._get(this.KEY_TOTAL),
-      this._get(this.KEY_TODAY),
+      this.getVal('total'),
+      this.getVal('today'),
     ]);
     const elTotal = document.getElementById('vbTotal');
     const elToday = document.getElementById('vbToday');
-    if (elTotal) elTotal.textContent = total !== null ? total : '—';
-    if (elToday) elToday.textContent = today !== null ? today : '—';
+    if (elTotal) elTotal.textContent = total;
+    if (elToday) elToday.textContent = today;
   },
 };
 
